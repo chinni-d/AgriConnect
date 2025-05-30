@@ -11,68 +11,36 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Calendar, MapPin, MoreHorizontal, Plus, Search, Users } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 
-// Mock data for seller's listings
-const mockListings = [
-  {
-    id: "1",
-    title: "Rice Husk - 2 Tons",
-    description: "Clean rice husk available for collection. Ideal for fuel or animal bedding.",
-    type: "Agricultural",
-    subtype: "Rice Husk",
-    quantity: "2 tons",
-    location: "Guntur, Andhra Pradesh",
-    price: "₹2,000",
-    date: "2 days ago",
-    image: "/placeholder.svg?height=200&width=300",
-    status: "active",
-    interests: 3,
-  },
-  {
-    id: "2",
-    title: "Sugarcane Bagasse - 5 Tons",
-    description: "Fresh sugarcane bagasse available. Perfect for paper manufacturing or biofuel.",
-    type: "Agricultural",
-    subtype: "Bagasse",
-    quantity: "5 tons",
-    location: "Pune, Maharashtra",
-    price: "₹4,500",
-    date: "1 week ago",
-    image: "/placeholder.svg?height=200&width=300",
-    status: "active",
-    interests: 7,
-  },
-  {
-    id: "3",
-    title: "Coconut Shells - 500kg",
-    description: "Dried coconut shells available. Great for activated carbon or crafts.",
-    type: "Agricultural",
-    subtype: "Coconut Shells",
-    quantity: "500 kg",
-    location: "Kochi, Kerala",
-    price: "₹1,500",
-    date: "3 days ago",
-    image: "/placeholder.svg?height=200&width=300",
-    status: "sold",
-    interests: 2,
-  },
-]
+
+import { useEffect } from "react"
 
 export default function ListingsPage() {
-  const { user } = useAuth()
-  const [searchTerm, setSearchTerm] = useState("")
-  const [activeTab, setActiveTab] = useState("active")
+  const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("active");
+  const [listings, setListings] = useState<Array<any>>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    setLoading(true);
+    fetch(`/api/listings?seller=${user.id}`)
+      .then(res => res.json())
+      .then(data => setListings(data.listings || []))
+      .finally(() => setLoading(false));
+  }, [user?.id]);
 
   // Filter listings based on search and active tab
-  const filteredListings = mockListings.filter((listing) => {
+  const filteredListings = listings.filter((listing: any) => {
     const matchesSearch =
-      listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      listing.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      listing.subtype.toLowerCase().includes(searchTerm.toLowerCase())
+      (listing.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        listing.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        listing.subtype?.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    const matchesTab = activeTab === "all" || listing.status === activeTab
+    const matchesTab = activeTab === "all" || listing.status === activeTab;
 
-    return matchesSearch && matchesTab
-  })
+    return matchesSearch && matchesTab;
+  });
 
   return (
     <div className="space-y-6">
@@ -120,7 +88,7 @@ export default function ListingsPage() {
             </Card>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredListings.map((listing) => (
+              {filteredListings.map((listing: any) => (
                 <Card key={listing.id}>
                   <div className="relative">
                     <img
@@ -196,8 +164,8 @@ export default function ListingsPage() {
           {/* Similar structure for sold listings */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredListings
-              .filter((listing) => listing.status === "sold")
-              .map((listing) => (
+              .filter((listing: any) => listing.status === "sold")
+              .map((listing: any) => (
                 <Card key={listing.id}>
                   {/* Similar card structure as above */}
                   <div className="relative">
@@ -241,7 +209,7 @@ export default function ListingsPage() {
         <TabsContent value="all" className="mt-6">
           {/* All listings */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredListings.map((listing) => (
+            {filteredListings.map((listing: any) => (
               <Card key={listing.id}>
                 {/* Similar card structure as above */}
                 <div className="relative">
@@ -298,3 +266,4 @@ export default function ListingsPage() {
     </div>
   )
 }
+

@@ -3,6 +3,23 @@
 
 import { Models } from "./models"
 import { seedDatabase } from "./seed"
+import { Pool } from "pg";
+
+// Create a new PostgreSQL client pool
+export const db = new Pool({
+  connectionString: process.env.SUPABASE_DB_URL || "postgresql://postgres:password@localhost:5432/agri_connect",
+  ssl: { rejectUnauthorized: false }, // Required for secure connections
+});
+
+// Test the database connection
+(async () => {
+  try {
+    await db.connect();
+    console.log("Connected to the database successfully.");
+  } catch (error) {
+    console.error("Failed to connect to the database:", error);
+  }
+})();
 
 export { Models, seedDatabase }
 

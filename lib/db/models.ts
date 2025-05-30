@@ -4,9 +4,17 @@
 
 import { v4 as uuidv4 } from "uuid"
 import type { User, WasteListing, Interest, Message, Review, Transaction, Notification, Analytics } from "./schema"
+import { db } from "./index"; // Use the PostgreSQL client instance
+import { createClient } from "@supabase/supabase-js";
 
-// Mock database storage
-const db = {
+// Initialize Supabase client using environment variables from .env.local
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+// Rename the in-memory database object to avoid conflicts
+const inMemoryDb = {
   users: new Map<string, User>(),
   listings: new Map<string, WasteListing>(),
   interests: new Map<string, Interest>(),
@@ -28,16 +36,16 @@ export const UserModel = {
       createdAt: now,
       updatedAt: now,
     }
-    db.users.set(id, user)
+    inMemoryDb.users.set(id, user)
     return user
   },
 
   findById: async (id: string): Promise<User | null> => {
-    return db.users.get(id) || null
+    return inMemoryDb.users.get(id) || null
   },
 
   findByEmail: async (email: string): Promise<User | null> => {
-    for (const user of db.users.values()) {
+    for (const user of inMemoryDb.users.values()) {
       if (user.email === email) {
         return user
       }
@@ -46,7 +54,7 @@ export const UserModel = {
   },
 
   update: async (id: string, userData: Partial<User>): Promise<User | null> => {
-    const user = db.users.get(id)
+    const user = inMemoryDb.users.get(id)
     if (!user) return null
 
     const updatedUser: User = {
@@ -54,16 +62,16 @@ export const UserModel = {
       ...userData,
       updatedAt: new Date(),
     }
-    db.users.set(id, updatedUser)
+    inMemoryDb.users.set(id, updatedUser)
     return updatedUser
   },
 
   delete: async (id: string): Promise<boolean> => {
-    return db.users.delete(id)
+    return inMemoryDb.users.delete(id)
   },
 
   findAll: async (filters?: Partial<User>): Promise<User[]> => {
-    const users = Array.from(db.users.values())
+    const users = Array.from(inMemoryDb.users.values())
     if (!filters) return users
 
     return users.filter((user) => {
@@ -80,27 +88,31 @@ export const UserModel = {
 // Waste Listing Model Implementation
 export const WasteListingModel = {
   create: async (
-    listingData: Omit<WasteListing, "id" | "interestCount" | "createdAt" | "updatedAt">,
+    listingData: Omit<WasteListing, "id" | "interestCount" | "createdAt" | "updatedAt">
   ): Promise<WasteListing> => {
-    const id = uuidv4()
-    const now = new Date()
-    const listing: WasteListing = {
-      id,
-      ...listingData,
-      interestCount: 0,
-      createdAt: now,
-      updatedAt: now,
+    const now = new Date();
+    const { data, error } = await supabase
+      .from("listings")
+      .insert({
+        ...listingData,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .select();
+
+    if (error) {
+      throw new Error(`Failed to insert listing: ${error.message}`);
     }
-    db.listings.set(id, listing)
-    return listing
+
+    return data[0];
   },
 
   findById: async (id: string): Promise<WasteListing | null> => {
-    return db.listings.get(id) || null
+    return inMemoryDb.listings.get(id) || null
   },
 
   update: async (id: string, listingData: Partial<WasteListing>): Promise<WasteListing | null> => {
-    const listing = db.listings.get(id)
+    const listing = inMemoryDb.listings.get(id)
     if (!listing) return null
 
     const updatedListing: WasteListing = {
@@ -108,42 +120,39 @@ export const WasteListingModel = {
       ...listingData,
       updatedAt: new Date(),
     }
-    db.listings.set(id, updatedListing)
+    inMemoryDb.listings.set(id, updatedListing)
     return updatedListing
   },
 
   delete: async (id: string): Promise<boolean> => {
-    return db.listings.delete(id)
+    return inMemoryDb.listings.delete(id)
   },
 
   findAll: async (filters?: Partial<WasteListing>): Promise<WasteListing[]> => {
-    const listings = Array.from(db.listings.values())
-    if (!filters) return listings
+    const query = supabase.from("listings").select("*");
 
-    return listings.filter((listing) => {
+    if (filters) {
       for (const [key, value] of Object.entries(filters)) {
-        // Handle nested objects like location
-        if (key === "location" && typeof value === "object") {
-          for (const [locKey, locValue] of Object.entries(value)) {
-            if (listing.location[locKey as keyof typeof listing.location] !== locValue) {
-              return false
-            }
-          }
-        } else if (listing[key as keyof WasteListing] !== value) {
-          return false
-        }
+        query.eq(key, value);
       }
-      return true
-    })
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      throw new Error(`Failed to fetch listings: ${error.message}`);
+    }
+
+    return data || [];
   },
 
   findBySeller: async (sellerId: string): Promise<WasteListing[]> => {
-    return Array.from(db.listings.values()).filter((listing) => listing.sellerId === sellerId)
+    return Array.from(inMemoryDb.listings.values()).filter((listing) => listing.sellerId === sellerId)
   },
 
   search: async (query: string): Promise<WasteListing[]> => {
     const lowercaseQuery = query.toLowerCase()
-    return Array.from(db.listings.values()).filter(
+    return Array.from(inMemoryDb.listings.values()).filter(
       (listing) =>
         listing.title.toLowerCase().includes(lowercaseQuery) ||
         listing.description.toLowerCase().includes(lowercaseQuery) ||
@@ -152,7 +161,7 @@ export const WasteListingModel = {
   },
 
   incrementInterestCount: async (id: string): Promise<WasteListing | null> => {
-    const listing = db.listings.get(id)
+    const listing = inMemoryDb.listings.get(id)
     if (!listing) return null
 
     const updatedListing: WasteListing = {
@@ -160,12 +169,12 @@ export const WasteListingModel = {
       interestCount: listing.interestCount + 1,
       updatedAt: new Date(),
     }
-    db.listings.set(id, updatedListing)
+    inMemoryDb.listings.set(id, updatedListing)
     return updatedListing
   },
 
   markAsSold: async (id: string): Promise<WasteListing | null> => {
-    const listing = db.listings.get(id)
+    const listing = inMemoryDb.listings.get(id)
     if (!listing) return null
 
     const updatedListing: WasteListing = {
@@ -173,7 +182,7 @@ export const WasteListingModel = {
       status: "sold",
       updatedAt: new Date(),
     }
-    db.listings.set(id, updatedListing)
+    inMemoryDb.listings.set(id, updatedListing)
     return updatedListing
   },
 }
@@ -188,7 +197,7 @@ export const InterestModel = {
       ...interestData,
       createdAt: now,
     }
-    db.interests.set(id, interest)
+    inMemoryDb.interests.set(id, interest)
 
     // Increment the interest count on the listing
     await WasteListingModel.incrementInterestCount(interestData.listingId)
@@ -197,35 +206,35 @@ export const InterestModel = {
   },
 
   findById: async (id: string): Promise<Interest | null> => {
-    return db.interests.get(id) || null
+    return inMemoryDb.interests.get(id) || null
   },
 
   update: async (id: string, interestData: Partial<Interest>): Promise<Interest | null> => {
-    const interest = db.interests.get(id)
+    const interest = inMemoryDb.interests.get(id)
     if (!interest) return null
 
     const updatedInterest: Interest = {
       ...interest,
       ...interestData,
     }
-    db.interests.set(id, updatedInterest)
+    inMemoryDb.interests.set(id, updatedInterest)
     return updatedInterest
   },
 
   delete: async (id: string): Promise<boolean> => {
-    return db.interests.delete(id)
+    return inMemoryDb.interests.delete(id)
   },
 
   findByListing: async (listingId: string): Promise<Interest[]> => {
-    return Array.from(db.interests.values()).filter((interest) => interest.listingId === listingId)
+    return Array.from(inMemoryDb.interests.values()).filter((interest) => interest.listingId === listingId)
   },
 
   findByBuyer: async (buyerId: string): Promise<Interest[]> => {
-    return Array.from(db.interests.values()).filter((interest) => interest.buyerId === buyerId)
+    return Array.from(inMemoryDb.interests.values()).filter((interest) => interest.buyerId === buyerId)
   },
 
   findByListingAndBuyer: async (listingId: string, buyerId: string): Promise<Interest | null> => {
-    for (const interest of db.interests.values()) {
+    for (const interest of inMemoryDb.interests.values()) {
       if (interest.listingId === listingId && interest.buyerId === buyerId) {
         return interest
       }
@@ -245,28 +254,28 @@ export const MessageModel = {
       isRead: false,
       createdAt: now,
     }
-    db.messages.set(id, message)
+    inMemoryDb.messages.set(id, message)
     return message
   },
 
   findById: async (id: string): Promise<Message | null> => {
-    return db.messages.get(id) || null
+    return inMemoryDb.messages.get(id) || null
   },
 
   markAsRead: async (id: string): Promise<Message | null> => {
-    const message = db.messages.get(id)
+    const message = inMemoryDb.messages.get(id)
     if (!message) return null
 
     const updatedMessage: Message = {
       ...message,
       isRead: true,
     }
-    db.messages.set(id, updatedMessage)
+    inMemoryDb.messages.set(id, updatedMessage)
     return updatedMessage
   },
 
   findConversation: async (user1Id: string, user2Id: string): Promise<Message[]> => {
-    return Array.from(db.messages.values())
+    return Array.from(inMemoryDb.messages.values())
       .filter(
         (message) =>
           (message.senderId === user1Id && message.receiverId === user2Id) ||
@@ -276,13 +285,13 @@ export const MessageModel = {
   },
 
   findByUser: async (userId: string): Promise<Message[]> => {
-    return Array.from(db.messages.values()).filter(
+    return Array.from(inMemoryDb.messages.values()).filter(
       (message) => message.senderId === userId || message.receiverId === userId,
     )
   },
 
   findUnreadByUser: async (userId: string): Promise<Message[]> => {
-    return Array.from(db.messages.values()).filter((message) => message.receiverId === userId && !message.isRead)
+    return Array.from(inMemoryDb.messages.values()).filter((message) => message.receiverId === userId && !message.isRead)
   },
 }
 
@@ -297,16 +306,16 @@ export const TransactionModel = {
       createdAt: now,
       updatedAt: now,
     }
-    db.transactions.set(id, transaction)
+    inMemoryDb.transactions.set(id, transaction)
     return transaction
   },
 
   findById: async (id: string): Promise<Transaction | null> => {
-    return db.transactions.get(id) || null
+    return inMemoryDb.transactions.get(id) || null
   },
 
   update: async (id: string, transactionData: Partial<Transaction>): Promise<Transaction | null> => {
-    const transaction = db.transactions.get(id)
+    const transaction = inMemoryDb.transactions.get(id)
     if (!transaction) return null
 
     const updatedTransaction: Transaction = {
@@ -314,20 +323,20 @@ export const TransactionModel = {
       ...transactionData,
       updatedAt: new Date(),
     }
-    db.transactions.set(id, updatedTransaction)
+    inMemoryDb.transactions.set(id, updatedTransaction)
     return updatedTransaction
   },
 
   findBySeller: async (sellerId: string): Promise<Transaction[]> => {
-    return Array.from(db.transactions.values()).filter((transaction) => transaction.sellerId === sellerId)
+    return Array.from(inMemoryDb.transactions.values()).filter((transaction) => transaction.sellerId === sellerId)
   },
 
   findByBuyer: async (buyerId: string): Promise<Transaction[]> => {
-    return Array.from(db.transactions.values()).filter((transaction) => transaction.buyerId === buyerId)
+    return Array.from(inMemoryDb.transactions.values()).filter((transaction) => transaction.buyerId === buyerId)
   },
 
   findByListing: async (listingId: string): Promise<Transaction | null> => {
-    for (const transaction of db.transactions.values()) {
+    for (const transaction of inMemoryDb.transactions.values()) {
       if (transaction.listingId === listingId) {
         return transaction
       }
@@ -336,7 +345,7 @@ export const TransactionModel = {
   },
 
   completeTransaction: async (id: string): Promise<Transaction | null> => {
-    const transaction = db.transactions.get(id)
+    const transaction = inMemoryDb.transactions.get(id)
     if (!transaction) return null
 
     const updatedTransaction: Transaction = {
@@ -345,7 +354,7 @@ export const TransactionModel = {
       completedAt: new Date(),
       updatedAt: new Date(),
     }
-    db.transactions.set(id, updatedTransaction)
+    inMemoryDb.transactions.set(id, updatedTransaction)
 
     // Mark the listing as sold
     await WasteListingModel.markAsSold(transaction.listingId)
@@ -365,34 +374,34 @@ export const NotificationModel = {
       isRead: false,
       createdAt: now,
     }
-    db.notifications.set(id, notification)
+    inMemoryDb.notifications.set(id, notification)
     return notification
   },
 
   findById: async (id: string): Promise<Notification | null> => {
-    return db.notifications.get(id) || null
+    return inMemoryDb.notifications.get(id) || null
   },
 
   markAsRead: async (id: string): Promise<Notification | null> => {
-    const notification = db.notifications.get(id)
+    const notification = inMemoryDb.notifications.get(id)
     if (!notification) return null
 
     const updatedNotification: Notification = {
       ...notification,
       isRead: true,
     }
-    db.notifications.set(id, updatedNotification)
+    inMemoryDb.notifications.set(id, updatedNotification)
     return updatedNotification
   },
 
   findByUser: async (userId: string): Promise<Notification[]> => {
-    return Array.from(db.notifications.values())
+    return Array.from(inMemoryDb.notifications.values())
       .filter((notification) => notification.userId === userId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
   },
 
   findUnreadByUser: async (userId: string): Promise<Notification[]> => {
-    return Array.from(db.notifications.values()).filter(
+    return Array.from(inMemoryDb.notifications.values()).filter(
       (notification) => notification.userId === userId && !notification.isRead,
     )
   },
@@ -408,22 +417,22 @@ export const AnalyticsModel = {
       ...analyticsData,
       createdAt: now,
     }
-    db.analytics.set(id, analytics)
+    inMemoryDb.analytics.set(id, analytics)
     return analytics
   },
 
   findById: async (id: string): Promise<Analytics | null> => {
-    return db.analytics.get(id) || null
+    return inMemoryDb.analytics.get(id) || null
   },
 
   findByMetric: async (metric: string, period: Analytics["period"]): Promise<Analytics[]> => {
-    return Array.from(db.analytics.values()).filter(
+    return Array.from(inMemoryDb.analytics.values()).filter(
       (analytics) => analytics.metric === metric && analytics.period === period,
     )
   },
 
   getLatestMetric: async (metric: string): Promise<Analytics | null> => {
-    const metrics = Array.from(db.analytics.values())
+    const metrics = Array.from(inMemoryDb.analytics.values())
       .filter((analytics) => analytics.metric === metric)
       .sort((a, b) => b.date.getTime() - a.date.getTime())
 
@@ -436,7 +445,7 @@ export const AnalyticsModel = {
 
     // Find today's metric if it exists
     let todayMetric: Analytics | null = null
-    for (const analytics of db.analytics.values()) {
+    for (const analytics of inMemoryDb.analytics.values()) {
       if (analytics.metric === metric && analytics.date.getTime() === today.getTime()) {
         todayMetric = analytics
         break
@@ -449,7 +458,7 @@ export const AnalyticsModel = {
         ...todayMetric,
         value: todayMetric.value + value,
       }
-      db.analytics.set(todayMetric.id, updatedMetric)
+      inMemoryDb.analytics.set(todayMetric.id, updatedMetric)
       return updatedMetric
     } else {
       // Create new metric
@@ -473,24 +482,24 @@ export const ReviewModel = {
       ...reviewData,
       createdAt: now,
     }
-    db.reviews.set(id, review)
+    inMemoryDb.reviews.set(id, review)
     return review
   },
 
   findById: async (id: string): Promise<Review | null> => {
-    return db.reviews.get(id) || null
+    return inMemoryDb.reviews.get(id) || null
   },
 
   findByReviewee: async (revieweeId: string): Promise<Review[]> => {
-    return Array.from(db.reviews.values()).filter((review) => review.revieweeId === revieweeId)
+    return Array.from(inMemoryDb.reviews.values()).filter((review) => review.revieweeId === revieweeId)
   },
 
   findByReviewer: async (reviewerId: string): Promise<Review[]> => {
-    return Array.from(db.reviews.values()).filter((review) => review.reviewerId === reviewerId)
+    return Array.from(inMemoryDb.reviews.values()).filter((review) => review.reviewerId === reviewerId)
   },
 
   findByListing: async (listingId: string): Promise<Review[]> => {
-    return Array.from(db.reviews.values()).filter((review) => review.listingId === listingId)
+    return Array.from(inMemoryDb.reviews.values()).filter((review) => review.listingId === listingId)
   },
 
   getAverageRating: async (revieweeId: string): Promise<number> => {

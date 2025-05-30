@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -102,6 +102,20 @@ const mockListings = [
   },
 ]
 
+type Listing = {
+  id: string;
+  title: string;
+  description: string;
+  subtype: string;
+  type: string;
+  distance: string;
+  price: string;
+  location: string;
+  date: string;
+  image?: string;
+  interests: number;
+};
+
 export default function MarketplacePage() {
   const { user, status } = useAuth()
   const [searchTerm, setSearchTerm] = useState("")
@@ -109,42 +123,51 @@ export default function MarketplacePage() {
   const [maxDistance, setMaxDistance] = useState([50])
   const [sortBy, setSortBy] = useState("newest")
   const [savedListings, setSavedListings] = useState<string[]>([])
+  const [listings, setListings] = useState<Listing[]>([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/listings?status=active`)
+      .then(res => res.json())
+      .then(data => setListings(data.listings || []))
+      .finally(() => setLoading(false));
+  }, []);
 
   // Filter listings based on search and filters
-  const filteredListings = mockListings.filter((listing) => {
+  const filteredListings = listings.filter((listing: any) => {
     const matchesSearch =
-      listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      listing.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      listing.subtype.toLowerCase().includes(searchTerm.toLowerCase())
+      listing?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing?.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing?.subtype?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesType = wasteType === "all" || listing.type === wasteType
+    const matchesType = wasteType === "all" || listing?.type === wasteType;
+    const matchesDistance = Number.parseInt(listing?.distance || "0") <= maxDistance[0];
 
-    const matchesDistance = Number.parseInt(listing.distance) <= maxDistance[0]
-
-    return matchesSearch && matchesType && matchesDistance
-  })
+    return matchesSearch && matchesType && matchesDistance;
+  });
 
   // Sort listings
-  const sortedListings = [...filteredListings].sort((a, b) => {
+  const sortedListings = [...filteredListings].sort((a: any, b: any) => {
     if (sortBy === "newest") {
-      return a.date.includes("day") && b.date.includes("week") ? -1 : 1
+      return a?.date?.includes("day") && b?.date?.includes("week") ? -1 : 1;
     } else if (sortBy === "oldest") {
-      return a.date.includes("week") && b.date.includes("day") ? -1 : 1
+      return a?.date?.includes("week") && b?.date?.includes("day") ? -1 : 1;
     } else if (sortBy === "price_low") {
       return (
-        Number.parseInt(a.price.replace("₹", "").replace(",", "")) -
-        Number.parseInt(b.price.replace("₹", "").replace(",", ""))
-      )
+        Number.parseInt(a?.price?.replace("₹", "").replace(",", "")) -
+        Number.parseInt(b?.price?.replace("₹", "").replace(",", ""))
+      );
     } else if (sortBy === "price_high") {
       return (
-        Number.parseInt(b.price.replace("₹", "").replace(",", "")) -
-        Number.parseInt(a.price.replace("₹", "").replace(",", ""))
-      )
+        Number.parseInt(b?.price?.replace("₹", "").replace(",", "")) -
+        Number.parseInt(a?.price?.replace("₹", "").replace(",", ""))
+      );
     } else if (sortBy === "distance") {
-      return Number.parseInt(a.distance) - Number.parseInt(b.distance)
+      return Number.parseInt(a?.distance || "0") - Number.parseInt(b?.distance || "0");
     }
-    return 0
-  })
+    return 0;
+  });
 
   const toggleSave = (id: string) => {
     setSavedListings((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
@@ -219,7 +242,11 @@ export default function MarketplacePage() {
 
             {/* Listings grid */}
             <div className="md:col-span-3">
-              {sortedListings.length === 0 ? (
+              {loading ? (
+                <div className="flex h-40 items-center justify-center rounded-lg border">
+                  <p className="text-muted-foreground">Loading listings...</p>
+                </div>
+              ) : sortedListings.length === 0 ? (
                 <div className="flex h-40 items-center justify-center rounded-lg border">
                   <p className="text-muted-foreground">No listings found matching your criteria</p>
                 </div>

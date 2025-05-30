@@ -11,21 +11,55 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, Upload } from "lucide-react"
+import { useAuth } from "@/hooks/use-auth";
 
 export default function NewListingPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { user } = useAuth();
   
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    
-    // In a real app, this would be an API call to create the listing
-    setTimeout(() => {
-      setIsSubmitting(false)
-      router.push("/dashboard/listings")
-    }, 1500)
-  }
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const location = `${formData.get("address")}, ${formData.get("city")}, ${formData.get("state")}, ${formData.get("pincode")}`;
+
+    const listingData = {
+      title: formData.get("title"),
+      description: formData.get("description"),
+      wasteType: formData.get("waste-type"),
+      subtype: formData.get("subtype"),
+      quantity: formData.get("quantity"),
+      unit: formData.get("unit"),
+      price: formData.get("price"),
+      location,
+      sellerId: user?.id, // Assuming user ID is available from auth context
+    };
+
+    try {
+      const res = await fetch("/api/listings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(listingData),
+      });
+
+      const responseData = await res.json();
+      console.log("API Response:", responseData);
+
+      if (!res.ok) {
+        throw new Error("Failed to create listing");
+      }
+
+      // Redirect to listings page after successful creation
+      router.push("/dashboard/listings");
+    } catch (error) {
+      console.error("Error creating listing:", error);
+      alert("Failed to create listing. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -55,6 +89,7 @@ export default function NewListingPage() {
                   <Label htmlFor="title">Title</Label>
                   <Input
                     id="title"
+                    name="title"
                     placeholder="e.g., Rice Husk - 2 Tons"
                     required
                   />
@@ -63,6 +98,7 @@ export default function NewListingPage() {
                   <Label htmlFor="description">Description</Label>
                   <Textarea
                     id="description"
+                    name="description"
                     placeholder="Describe your waste in detail, including its condition, age, and potential uses"
                     rows={5}
                     required
@@ -71,7 +107,7 @@ export default function NewListingPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="waste-type">Waste Type</Label>
-                    <Select required>
+                    <Select name="waste-type" required>
                       <SelectTrigger id="waste-type">
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
@@ -87,6 +123,7 @@ export default function NewListingPage() {
                     <Label htmlFor="subtype">Sub Type</Label>
                     <Input
                       id="subtype"
+                      name="subtype"
                       placeholder="e.g., Rice Husk, Bagasse"
                       required
                     />
@@ -108,6 +145,7 @@ export default function NewListingPage() {
                     <Label htmlFor="quantity">Quantity</Label>
                     <Input
                       id="quantity"
+                      name="quantity"
                       placeholder="e.g., 2"
                       type="number"
                       min="0"
@@ -116,7 +154,7 @@ export default function NewListingPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="unit">Unit</Label>
-                    <Select required>
+                    <Select name="unit" required>
                       <SelectTrigger id="unit">
                         <SelectValue placeholder="Select unit" />
                       </SelectTrigger>
@@ -133,6 +171,7 @@ export default function NewListingPage() {
                   <Label htmlFor="price">Price (₹)</Label>
                   <Input
                     id="price"
+                    name="price"
                     placeholder="e.g., 2000"
                     type="number"
                     min="0"
@@ -172,6 +211,7 @@ export default function NewListingPage() {
                   <Label htmlFor="address">Address</Label>
                   <Textarea
                     id="address"
+                    name="address"
                     placeholder="Enter your address"
                     rows={3}
                     required
@@ -180,16 +220,31 @@ export default function NewListingPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="city">City</Label>
-                    <Input id="city" placeholder="e.g., Guntur" required />
+                    <Input
+                      id="city"
+                      name="city"
+                      placeholder="e.g., Guntur"
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="state">State</Label>
-                    <Input id="state" placeholder="e.g., Andhra Pradesh" required />
+                    <Input
+                      id="state"
+                      name="state"
+                      placeholder="e.g., Andhra Pradesh"
+                      required
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="pincode">PIN Code</Label>
-                  <Input id="pincode" placeholder="e.g., 522001" required />
+                  <Input
+                    id="pincode"
+                    name="pincode"
+                    placeholder="e.g., 522001"
+                    required
+                  />
                 </div>
                 <div className="pt-2">
                   <p className="text-xs text-gray-500">
