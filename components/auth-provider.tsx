@@ -40,22 +40,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      // In a real app, this would be an API call
-      // For demo purposes, we'll simulate a successful login
-      const mockUser = {
-        id: "user-1",
-        name: "Demo User",
-        email,
-        role: email.includes("seller") ? "seller" : ("buyer" as "seller" | "buyer"),
+      // Real login: check Supabase for user with matching email
+      const { supabase } = await import("@/lib/supabaseClient");
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email)
+        .maybeSingle();
+
+      console.log("LOGIN DEBUG:", { email, password, user, error });
+
+      if (error || !user) {
+        // User not found
+        return false;
       }
 
-      setUser(mockUser)
-      localStorage.setItem("agriconnect-user", JSON.stringify(mockUser))
-      setStatus("authenticated")
-      return true
+      if (user.password !== password) {
+        // Password does not match
+        return false;
+      }
+
+      // Remove password before storing
+      const { password: _pw, ...userWithoutPassword } = user;
+      setUser(userWithoutPassword);
+      localStorage.setItem("agriconnect-user", JSON.stringify(userWithoutPassword));
+      setStatus("authenticated");
+      return true;
     } catch (error) {
-      console.error("Login failed:", error)
-      return false
+      console.error("Login failed:", error);
+      return false;
     }
   }
 

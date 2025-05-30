@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useAuth } from "@/hooks/use-auth"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import bcrypt from "bcryptjs"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -22,21 +23,21 @@ export default function LoginPage() {
   const [error, setError] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     try {
-      const success = await login(email, password)
+      const success = await login(email, password);
       if (success) {
-        router.push("/dashboard")
+        router.push("/dashboard");
       } else {
-        setError("Invalid email or password")
+        setError("Invalid email or password");
       }
     } catch (err) {
-      setError("An error occurred. Please try again.")
+      setError("An error occurred. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 

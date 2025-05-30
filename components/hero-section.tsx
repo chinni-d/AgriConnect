@@ -33,7 +33,7 @@ export function HeroSection() {
             <img
               alt="AgriConnect Platform"
               className="aspect-video overflow-hidden rounded-xl object-cover object-center"
-              src="/placeholder.svg?height=550&width=800"
+              src="img.png"
             />
           </div>
         </div>
