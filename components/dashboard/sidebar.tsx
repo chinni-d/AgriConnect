@@ -45,33 +45,13 @@ export function DashboardSidebar() {
 
   const buyerNavItems = [
     {
-      title: "Dashboard",
-      href: "/dashboard",
-      icon: Home,
-    },
-    {
       title: "Marketplace",
       href: "/marketplace",
       icon: ShoppingCart,
     },
     {
-      title: "Saved Listings",
-      href: "/dashboard/interests",
-      icon: FileText,
-    },
-    {
-      title: "Messages",
-      href: "/dashboard/messages",
-      icon: MessageSquare,
-    },
-    {
-      title: "Analytics",
-      href: "/dashboard/analytics",
-      icon: BarChart,
-    },
-    {
-      title: "Settings",
-      href: "/dashboard/settings",
+      title: "Profile",
+      href: "/dashboard/profile",
       icon: Settings,
     },
   ]

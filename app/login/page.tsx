@@ -30,7 +30,13 @@ export default function LoginPage() {
     try {
       const success = await login(email, password);
       if (success) {
-        router.push("/dashboard");
+        // Redirect based on user role
+        const user = JSON.parse(localStorage.getItem("agriconnect-user") || "{}");
+        if (user.role === "buyer") {
+          router.push("/marketplace");
+        } else {
+          router.push("/dashboard");
+        }
       } else {
         setError("Invalid email or password");
       }

@@ -19,8 +19,10 @@ export default function DashboardLayout({
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login")
+    } else if (user?.role === "buyer") {
+      router.push("/marketplace") // Redirect buyers to the marketplace
     }
-  }, [status, router])
+  }, [status, router, user?.role])
 
   if (status === "loading") {
     return (

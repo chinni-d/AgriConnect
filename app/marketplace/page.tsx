@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { toast } from "@/components/ui/use-toast"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -109,7 +110,7 @@ type Listing = {
   subtype: string;
   type: string;
   distance: string;
-  price: string;
+  price: string | number;
   location: string;
   date: string;
   image?: string;
@@ -172,6 +173,34 @@ export default function MarketplacePage() {
   const toggleSave = (id: string) => {
     setSavedListings((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
   }
+
+  const handleAddToCart = (item: any) => {
+    const cartItem = {
+      id: item.id,
+      name: item.title,
+      price:
+        typeof item.price === "string"
+          ? parseFloat(item.price.replace("₹", "").replace(",", ""))
+          : item.price,
+      image: item.image,
+      description: item.description,
+      subtype: item.subtype,
+      location: item.location,
+      distance: item.distance,
+      date: item.date,
+      interests: item.interests,
+    };
+
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    cart.push(cartItem);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    window.dispatchEvent(new Event("cart-updated"));
+    toast({
+      title: "Added to cart",
+      description: `${item.title} has been added to your cart.`,
+      duration: 2000,
+    });
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -252,56 +281,69 @@ export default function MarketplacePage() {
                 </div>
               ) : (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {sortedListings.map((listing) => (
-                    <Card key={listing.id} className="overflow-hidden">
-                      <div className="relative">
-                        <img
-                          src={listing.image || "/placeholder.svg"}
-                          alt={listing.title}
-                          className="h-48 w-full object-cover"
-                        />
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-2 top-2 bg-white/80 hover:bg-white/90"
-                          onClick={() => toggleSave(listing.id)}
-                        >
-                          <Heart
-                            className={`h-5 w-5 ${
-                              savedListings.includes(listing.id) ? "fill-red-500 text-red-500" : "text-gray-500"
-                            }`}
-                          />
-                          <span className="sr-only">Save listing</span>
-                        </Button>
-                        <Badge className="absolute left-2 top-2 bg-green-600 hover:bg-green-700">
-                          {listing.subtype}
-                        </Badge>
+              {sortedListings.map((listing) => (
+                <Card key={listing.id} className="overflow-hidden">
+                  <div className="relative">
+                    <img
+                      src={listing.image || "/placeholder.svg"}
+                      alt={listing.title}
+                      className="h-48 w-full object-cover"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-2 bg-white/80 hover:bg-white/90"
+                      onClick={() => toggleSave(listing.id)}
+                    >
+                      <Heart
+                        className={`h-5 w-5 ${
+                          savedListings.includes(listing.id)
+                            ? "fill-red-500 text-red-500"
+                            : "text-gray-500"
+                        }`}
+                      />
+                      <span className="sr-only">Save listing</span>
+                    </Button>
+                    <Badge className="absolute left-2 top-2 bg-green-600 hover:bg-green-700">
+                      {listing.subtype}
+                    </Badge>
+                  </div>
+                  <CardHeader className="p-4 pb-0">
+                    <CardTitle className="text-lg">{listing.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-2">
+                    <p className="mb-2 line-clamp-2 text-sm text-gray-500">
+                      {listing.description}
+                    </p>
+                    <div className="mt-4 space-y-2 text-sm">
+                      <div className="flex items-center text-gray-500">
+                        <MapPin className="mr-2 h-4 w-4" />
+                        {listing.location} ({listing.distance})
                       </div>
-                      <CardHeader className="p-4 pb-0">
-                        <CardTitle className="text-lg">{listing.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 pt-2">
-                        <p className="mb-2 line-clamp-2 text-sm text-gray-500">{listing.description}</p>
-                        <div className="mt-4 space-y-2 text-sm">
-                          <div className="flex items-center text-gray-500">
-                            <MapPin className="mr-2 h-4 w-4" />
-                            {listing.location} ({listing.distance})
-                          </div>
-                          <div className="flex items-center text-gray-500">
-                            <Calendar className="mr-2 h-4 w-4" />
-                            Listed {listing.date}
-                          </div>
-                          <div className="flex items-center font-medium">Price: {listing.price}</div>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="flex items-center justify-between p-4 pt-0">
-                        <div className="text-sm text-gray-500">{listing.interests} interested</div>
-                        <Button size="sm" className="bg-green-600 hover:bg-green-700" asChild>
-                          <Link href={`/marketplace/${listing.id}`}>View Details</Link>
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
+                      <div className="flex items-center text-gray-500">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        Listed {listing.date}
+                      </div>
+                      <div className="flex items-center font-medium">
+                        Price: {listing.price}
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex items-center justify-between p-4 pt-0">
+                    <div className="text-sm text-gray-500">
+                      {listing.interests} interested
+                    </div>
+                    <div className="flex justify-end mt-2">
+                          <button
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                            onClick={() => handleAddToCart(listing)}
+                          >
+                            Add to Cart
+                          </button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
                 </div>
               )}
             </div>
