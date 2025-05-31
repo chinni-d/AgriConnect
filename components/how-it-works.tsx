@@ -1,3 +1,6 @@
+"use client"
+import { motion } from "framer-motion";
+
 export function HowItWorks() {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-green-50">
@@ -12,7 +15,14 @@ export function HowItWorks() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 py-12 md:grid-cols-3">
-          <div className="flex flex-col items-center space-y-2 rounded-lg border bg-white p-6 shadow-sm">
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border bg-white p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-xl font-bold text-green-600">
               1
             </div>
@@ -20,8 +30,15 @@ export function HowItWorks() {
             <p className="text-center text-gray-500">
               Sign up as a farmer/seller or buyer/industry and set up your profile with relevant details.
             </p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 rounded-lg border bg-white p-6 shadow-sm">
+          </motion.div>
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border bg-white p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-xl font-bold text-green-600">
               2
             </div>
@@ -29,8 +46,15 @@ export function HowItWorks() {
             <p className="text-center text-gray-500">
               Sellers can list available waste with details, while buyers can browse and filter listings.
             </p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 rounded-lg border bg-white p-6 shadow-sm">
+          </motion.div>
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border bg-white p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-xl font-bold text-green-600">
               3
             </div>
@@ -38,8 +62,15 @@ export function HowItWorks() {
             <p className="text-center text-gray-500">
               Buyers express interest, and once mutual interest is established, contact details are shared.
             </p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 rounded-lg border bg-white p-6 shadow-sm md:col-span-3">
+          </motion.div>
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border bg-white p-6 shadow-sm md:col-span-3"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-xl font-bold text-green-600">
               4
             </div>
@@ -47,7 +78,7 @@ export function HowItWorks() {
             <p className="text-center text-gray-500">
               Finalize the transaction offline, and sellers can mark listings as sold once completed.
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

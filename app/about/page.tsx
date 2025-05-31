@@ -1,9 +1,11 @@
+"use client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Leaf, Recycle, Users, BarChart, Globe } from "lucide-react"
+import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (
@@ -19,7 +21,7 @@ export default function AboutPage() {
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                     About <span className="text-green-600">AgriConnect</span>
                   </h1>
-                  <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  <p className="max-w-[600px] text-gray-500 md:text-base/relaxed lg:text-base/relaxed xl:text-base/relaxed">
                     Transforming agricultural and industrial waste into valuable resources through sustainable
                     connections.
                   </p>
@@ -40,34 +42,50 @@ export default function AboutPage() {
         <section className="py-16 md:py-24">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-              <Card className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <Leaf className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h2 className="mb-4 text-2xl font-bold">Our Mission</h2>
-                  <p className="text-gray-500">
-                    AgriConnect aims to revolutionize waste management in the agricultural and industrial sectors by
-                    creating a seamless marketplace that connects waste generators with potential users. We strive to
-                    reduce environmental impact, promote sustainable practices, and create economic opportunities for
-                    farmers and businesses alike.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <Globe className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h2 className="mb-4 text-2xl font-bold">Our Vision</h2>
-                  <p className="text-gray-500">
-                    We envision a future where agricultural and industrial waste is no longer seen as a burden but as a
-                    valuable resource in a circular economy. AgriConnect aspires to be the leading platform that
-                    facilitates this transformation, creating a world where waste is minimized, resources are optimized,
-                    and sustainable practices are the norm.
-                  </p>
-                </CardContent>
-              </Card>
+              <motion.div
+                className="overflow-hidden"
+                initial={{ opacity: 0, x: -100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.8 }}
+              >
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                      <Leaf className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h2 className="mb-4 text-2xl font-bold">Our Mission</h2>
+                    <p className="text-gray-500">
+                      AgriConnect aims to revolutionize waste management in the agricultural and industrial sectors by
+                      creating a seamless marketplace that connects waste generators with potential users. We strive to
+                      reduce environmental impact, promote sustainable practices, and create economic opportunities for
+                      farmers and businesses alike.
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              <motion.div
+                className="overflow-hidden"
+                initial={{ opacity: 0, x: 100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.8 }}
+              >
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                      <Globe className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h2 className="mb-4 text-2xl font-bold">Our Vision</h2>
+                    <p className="text-gray-500">
+                      We envision a future where agricultural and industrial waste is no longer seen as a burden but as a
+                      valuable resource in a circular economy. AgriConnect aspires to be the leading platform that
+                      facilitates this transformation, creating a world where waste is minimized, resources are optimized,
+                      and sustainable practices are the norm.
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -77,23 +95,44 @@ export default function AboutPage() {
           <div className="container px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="mb-4 text-3xl font-bold">Our Story</h2>
-              <p className="mb-8 text-gray-500">
-                AgriConnect was founded in 2023 by a team of agricultural experts, environmental scientists, and
-                technology innovators who recognized the immense potential in agricultural waste. What began as a small
-                pilot project in rural communities has now grown into a comprehensive platform serving farmers and
-                industries across the country.
-              </p>
-              <p className="mb-8 text-gray-500">
-                Our founders witnessed firsthand the challenges farmers faced in disposing of agricultural waste, while
-                simultaneously observing industries struggling to find sustainable raw materials. This disconnect
-                inspired the creation of AgriConnect – a platform that bridges this gap and transforms waste management
-                into a win-win situation for all stakeholders.
-              </p>
-              <p className="text-gray-500">
-                Today, AgriConnect continues to grow, driven by our commitment to sustainability, innovation, and
-                community empowerment. We're proud of the positive environmental impact we've made and the economic
-                opportunities we've created for our users.
-              </p>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.6 }}
+              >
+                <p className="mb-8 text-gray-500">
+                  AgriConnect was founded in 2023 by a team of agricultural experts, environmental scientists, and
+                  technology innovators who recognized the immense potential in agricultural waste. What began as a small
+                  pilot project in rural communities has now grown into a comprehensive platform serving farmers and
+                  industries across the country.
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <p className="mb-8 text-gray-500">
+                  Our founders witnessed firsthand the challenges farmers faced in disposing of agricultural waste, while
+                  simultaneously observing industries struggling to find sustainable raw materials. This disconnect
+                  inspired the creation of AgriConnect – a platform that bridges this gap and transforms waste management
+                  into a win-win situation for all stakeholders.
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <p className="text-gray-500">
+                  Today, AgriConnect continues to grow, driven by our commitment to sustainability, innovation, and
+                  community empowerment. We're proud of the positive environmental impact we've made and the economic
+                  opportunities we've created for our users.
+                </p>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -110,7 +149,15 @@ export default function AboutPage() {
                 management.
               </p>
             </div>
-            <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <style jsx>{`
+              .card-content {
+                min-height: 350px; /* Allow cards to expand dynamically */
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              }
+            `}</style>
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
               {[
                 {
                   name: "Renuka Darapureddy",
@@ -133,24 +180,45 @@ export default function AboutPage() {
                 {
                   name: "Madakam Bindu Madhavi",
                   role: "Developer",
-                  bio: "Passionate about Web Development and Data Science, with a drive to build intelligent, data-driven web applications.Eager to integrate analytics and modern web technologies to create impactful digital solutions.",
+                  bio: "Passionate about Web Development and Data Science, with a drive to build intelligent, data-driven web applications.",
                   image: "bindu.jpg",
                 },
+                {
+                  name: "Gangavarapu Jaya Sri Durga",
+                  role: "Developer",
+                  bio: "Interested in Data Analytics with a passion for uncovering insights through data exploration and visualization.",
+                  image: "jaya.jpg",
+                },
+                
               ].map((member, index) => (
-                <Card key={index}>
-                  <CardContent className="p-6 text-center">
-                    <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-full bg-gray-200">
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <h3 className="mb-1 text-lg font-bold">{member.name}</h3>
-                    <p className="mb-2 text-sm text-green-600">{member.role}</p>
-                    <p className="text-sm text-gray-500">{member.bio}</p>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  whileHover={{ scale: 1.1, rotate: 2 }}
+                  transition={{ duration: 0.5, delay: index * 0.2 }}
+                >
+                  <Card
+                    style={{ height: "350px" }}
+                  >
+                    <CardContent className="p-6 text-center">
+                      <div
+                        className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-full bg-gray-200"
+                        style={{ transformOrigin: "center", overflow: "hidden" }}
+                      >
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <h3 className="mb-1 text-lg font-bold">{member.name}</h3>
+                      <p className="mb-2 text-sm text-green-600">{member.role}</p>
+                      <p className="text-sm text-gray-500">{member.bio}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -160,26 +228,45 @@ export default function AboutPage() {
         <section className="py-16 md:py-24">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.6 }}
+              >
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                   Join the AgriConnect Community
                 </h2>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Be part of the solution. Start turning waste into worth today.
                 </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link href="/">
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700">
-                    Get Started
-                  </Button>
-                </Link>
-                <Link href="/contact">
-                  <Button size="lg" variant="outline">
-                    Contact Us
-                  </Button>
-                </Link>
-              </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                  <Link href="/register">
+                    <Button size="lg" className="bg-green-600 hover:bg-green-700">
+                      Get Started
+                    </Button>
+                  </Link>
+                  <Link href="/contact">
+                    <Button size="lg" variant="outline">
+                      Contact Us
+                    </Button>
+                  </Link>
+                </div>
+              </motion.div>
             </div>
           </div>
         </section>

@@ -1,4 +1,6 @@
+"use client"
 import { Leaf, Recycle, MapPin, ShoppingCart, Users } from "lucide-react"
+import { motion } from "framer-motion";
 
 export function Features() {
   return (
@@ -17,7 +19,14 @@ export function Features() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-          <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="rounded-full bg-green-100 p-3">
               <Leaf className="h-6 w-6 text-green-600" />
             </div>
@@ -25,8 +34,15 @@ export function Features() {
             <p className="text-center text-gray-500">
               Easily upload waste details including type, quantity, photos, and location with our intuitive interface.
             </p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
+          </motion.div>
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="rounded-full bg-green-100 p-3">
               <Recycle className="h-6 w-6 text-green-600" />
             </div>
@@ -34,8 +50,15 @@ export function Features() {
             <p className="text-center text-gray-500">
               Find exactly what you need with advanced filters for waste type, quantity, and location.
             </p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
+          </motion.div>
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="rounded-full bg-green-100 p-3">
               <MapPin className="h-6 w-6 text-green-600" />
             </div>
@@ -43,8 +66,15 @@ export function Features() {
             <p className="text-center text-gray-500">
               Integrated Google Maps API shows the distance between buyers and sellers for efficient logistics.
             </p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
+          </motion.div>
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="rounded-full bg-green-100 p-3">
               <ShoppingCart className="h-6 w-6 text-green-600" />
             </div>
@@ -52,8 +82,15 @@ export function Features() {
             <p className="text-center text-gray-500">
               Express interest in listings and track real-time interest counts on your own waste listings.
             </p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
+          </motion.div>
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="rounded-full bg-green-100 p-3">
               <Users className="h-6 w-6 text-green-600" />
             </div>
@@ -61,8 +98,15 @@ export function Features() {
             <p className="text-center text-gray-500">
               Customized dashboards and features for farmers/sellers and buyers/industries.
             </p>
-          </div>
-          <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
+          </motion.div>
+          <motion.div
+            className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="rounded-full bg-green-100 p-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +129,7 @@ export function Features() {
             <p className="text-center text-gray-500">
               Contact information is revealed only after mutual interest is established between parties.
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

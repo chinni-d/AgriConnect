@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Mail, MapPin, Phone, MessageSquare, CheckCircle } from "lucide-react"
+import { motion } from "framer-motion";
 
 export default function ContactPage() {
   const [formState, setFormState] = useState({
@@ -61,7 +62,7 @@ export default function ContactPage() {
           <div className="container px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Contact Us</h1>
-              <p className="mt-4 text-gray-500 md:text-xl">
+              <p className="mt-4 text-gray-500 md:text-base">
                 Have questions about AgriConnect? We're here to help. Reach out to our team for support, feedback, or
                 partnership inquiries.
               </p>
@@ -73,36 +74,51 @@ export default function ContactPage() {
         <section className="py-16">
           <div className="container px-4 md:px-6">
             <div className="grid gap-8 md:grid-cols-3">
-              <Card>
-                <CardContent className="flex flex-col items-center p-6 text-center">
-                  <div className="mb-4 rounded-full bg-green-100 p-3">
-                    <Phone className="h-6 w-6 text-green-600" />
-                  </div>
-                  <CardTitle className="mb-2">Phone</CardTitle>
-                  <CardDescription>Mon-Fri from 8am to 5pm</CardDescription>
-                  <p className="mt-2 font-medium">+91 (800) 123-4567</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="flex flex-col items-center p-6 text-center">
-                  <div className="mb-4 rounded-full bg-green-100 p-3">
-                    <Mail className="h-6 w-6 text-green-600" />
-                  </div>
-                  <CardTitle className="mb-2">Email</CardTitle>
-                  <CardDescription>We'll respond within 24 hours</CardDescription>
-                  <p className="mt-2 font-medium">support@agriconnect.com</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="flex flex-col items-center p-6 text-center">
-                  <div className="mb-4 rounded-full bg-green-100 p-3">
-                    <MapPin className="h-6 w-6 text-green-600" />
-                  </div>
-                  <CardTitle className="mb-2">Office</CardTitle>
-                  <CardDescription>Come say hello at our office</CardDescription>
-                  <p className="mt-2 font-medium">123 Green Street, Bangalore, India</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card>
+                  <CardContent className="flex flex-col items-center p-6 text-center">
+                    <div className="mb-4 rounded-full bg-green-100 p-3">
+                      <Phone className="h-6 w-6 text-green-600" />
+                    </div>
+                    <CardTitle className="mb-2">Phone</CardTitle>
+                    <CardDescription>You can contact us at</CardDescription>
+                    <p className="mt-2 font-medium">+91 9182417917</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card>
+                  <CardContent className="flex flex-col items-center p-6 text-center">
+                    <div className="mb-4 rounded-full bg-green-100 p-3">
+                      <Mail className="h-6 w-6 text-green-600" />
+                    </div>
+                    <CardTitle className="mb-2">Email</CardTitle>
+                    <CardDescription>We'll respond within 24 hours</CardDescription>
+                    <p className="mt-2 font-medium">renukadarapureddy123@gmail.com </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card>
+                  <CardContent className="flex flex-col items-center p-6 text-center">
+                    <div className="mb-4 rounded-full bg-green-100 p-3">
+                      <MapPin className="h-6 w-6 text-green-600" />
+                    </div>
+                    <CardTitle className="mb-2">Office</CardTitle>
+                    <CardDescription>Come say hello at our office</CardDescription>
+                    <p className="mt-2 font-medium">123 Green Street, Bangalore, India</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -250,19 +266,27 @@ export default function ContactPage() {
                       "We're always open to partnerships that align with our mission of sustainable waste management. Please reach out to us through the contact form with details about your organization and partnership ideas.",
                   },
                 ].map((faq, index) => (
-                  <Card key={index}>
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="mt-1 rounded-full bg-green-100 p-1">
-                          <MessageSquare className="h-4 w-4 text-green-600" />
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 0.6, delay: index * 0.2 }}
+                  >
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="mt-1 rounded-full bg-green-100 p-1">
+                            <MessageSquare className="h-4 w-4 text-green-600" />
+                          </div>
+                          <div>
+                            <h3 className="mb-2 font-bold">{faq.question}</h3>
+                            <p className="text-gray-500">{faq.answer}</p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="mb-2 font-bold">{faq.question}</h3>
-                          <p className="text-gray-500">{faq.answer}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 ))}
               </div>
             </div>

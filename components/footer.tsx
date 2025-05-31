@@ -13,13 +13,13 @@ export function Footer() {
           </p>
         </div>
         <div className="flex gap-4">
-          <Link href="/terms" className="text-sm font-medium hover:text-green-600 transition-colors">
+          <Link href="/" className="text-sm font-medium hover:text-green-600 transition-colors">
             Terms
           </Link>
-          <Link href="/privacy" className="text-sm font-medium hover:text-green-600 transition-colors">
+          <Link href="/" className="text-sm font-medium hover:text-green-600 transition-colors">
             Privacy
           </Link>
-          <Link href="/contact" className="text-sm font-medium hover:text-green-600 transition-colors">
+          <Link href="/" className="text-sm font-medium hover:text-green-600 transition-colors">
             Contact
           </Link>
         </div>
