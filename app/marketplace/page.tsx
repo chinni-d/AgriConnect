@@ -92,6 +92,10 @@ export default function MarketplacePage() {
   }
 
   const handleAddToCart = (item: any) => {
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
     const cartItem = {
       id: item.id,
       name: item.title,
@@ -242,30 +246,41 @@ export default function MarketplacePage() {
                             </div>
                          
 
-                            <div className="flex items-center text-gray-500">
-                              <Calendar className="mr-2 h-4 w-4" />
-                              Listed {listing.date}
-                            </div>
-                            <div className="flex items-center font-medium justify-between">
-                              <span className="text-left">Qty: {listing.quantity} {listing.unit}</span>
-                              <span className="ml-auto text-right">₹{listing.price}</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                        <CardFooter className="flex items-center justify-between p-4 pt-0">
-                          <div className="text-sm text-gray-500">
-                            {listing.interests} 
-                            <span className="ml-2  text-blue-600 hover:text-blue-800 cursor-pointer">View more</span>
-                          </div>
-                          <div className="flex justify-end mt-2">
-                                <button
-                                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                                  onClick={(e) => { e.stopPropagation(); handleAddToCart(listing); }}
-                                >
-                                  Add to Cart
-                                </button>
-                          </div>
-                        </CardFooter>
+                <div className="flex items-center text-gray-500">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Listed {listing.date}
+                </div>
+                <div className="flex items-center font-medium justify-between">
+                  <span className="text-left">Qty: {listing.quantity} {listing.unit}</span>
+                  <span className="ml-auto text-right">₹{listing.price}</span>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex items-center justify-between p-4 pt-0">
+              <div className="text-sm text-gray-500">
+                {listing.interests} 
+                <span
+                  className="ml-2  text-blue-600 hover:text-blue-800 cursor-pointer"
+                  onClick={(e) => {
+                    if (!user) {
+                      e.stopPropagation();
+                      window.location.href = "/login";
+                    }
+                    // If logged in, do not stop propagation so Dialog opens
+                  }}
+                >
+                  View more
+                </span>
+              </div>
+              <div className="flex justify-end mt-2">
+                <button
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  onClick={(e) => { e.stopPropagation(); handleAddToCart(listing); }}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </CardFooter>
                       </Card>
                     </div>
                   </DialogTrigger>
