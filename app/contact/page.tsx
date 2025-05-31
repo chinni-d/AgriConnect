@@ -115,7 +115,7 @@ export default function ContactPage() {
                     </div>
                     <CardTitle className="mb-2">Office</CardTitle>
                     <CardDescription>Come say hello at our office</CardDescription>
-                    <p className="mt-2 font-medium">123 Green Street, Bangalore, India</p>
+                    <p className="mt-2 font-medium">Bhimavaram, Andhra Pradesh, India</p>
                   </CardContent>
                 </Card>
               </motion.div>
