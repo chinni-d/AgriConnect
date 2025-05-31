@@ -240,9 +240,7 @@ export default function MarketplacePage() {
                               <MapPin className="mr-2 h-4 w-4" />
                               {listing.location} ({listing.distance})
                             </div>
-                            <div className="flex items-center font-medium justify-between">
-                              <span className="text-left">Contact Seller: {listing.contactNumber}</span>
-                            </div>
+                         
 
                             <div className="flex items-center text-gray-500">
                               <Calendar className="mr-2 h-4 w-4" />
@@ -276,7 +274,7 @@ export default function MarketplacePage() {
                       <DialogTitle>{listing.title}</DialogTitle>
                     </DialogHeader>
                     <div className="flex flex-col gap-2 mt-2">
-                      <img src={listing.image || "/placeholder.svg"} alt={listing.title} className="w-full h-48 object-cover rounded" />
+                      <img src={listing.image || "https://www.cn-pellet.com/d/file/p/2019/11-17/ece68421685b9b8a4694bb0ab7178ed2.jpg"} alt={listing.title} className="w-full h-48 object-cover rounded" />
                       <div><strong>Description:</strong> {listing.description}</div>
                       <div><strong>Subtype:</strong> {listing.subtype}</div>
                       <div><strong>Quantity:</strong> {listing.quantity} {listing.unit}</div>
