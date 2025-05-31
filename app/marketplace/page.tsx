@@ -11,97 +11,11 @@ import { Slider } from "@/components/ui/slider"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Heart, Calendar } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 
-// Mock data for waste listings
-const mockListings = [
-  {
-    id: "1",
-    title: "Rice Husk - 2 Tons",
-    description: "Clean rice husk available for collection. Ideal for fuel or animal bedding.",
-    type: "Agricultural",
-    subtype: "Rice Husk",
-    quantity: "2 tons",
-    location: "Guntur, Andhra Pradesh",
-    distance: "5 km",
-    price: "₹2,000",
-    date: "2 days ago",
-    image: "/placeholder.svg?height=200&width=300",
-    interests: 3,
-  },
-  {
-    id: "2",
-    title: "Sugarcane Bagasse - 5 Tons",
-    description: "Fresh sugarcane bagasse available. Perfect for paper manufacturing or biofuel.",
-    type: "Agricultural",
-    subtype: "Bagasse",
-    quantity: "5 tons",
-    location: "Pune, Maharashtra",
-    distance: "12 km",
-    price: "₹4,500",
-    date: "1 week ago",
-    image: "/placeholder.svg?height=200&width=300",
-    interests: 7,
-  },
-  {
-    id: "3",
-    title: "Coconut Shells - 500kg",
-    description: "Dried coconut shells available. Great for activated carbon or crafts.",
-    type: "Agricultural",
-    subtype: "Coconut Shells",
-    quantity: "500 kg",
-    location: "Kochi, Kerala",
-    distance: "8 km",
-    price: "₹1,500",
-    date: "3 days ago",
-    image: "/placeholder.svg?height=200&width=300",
-    interests: 2,
-  },
-  {
-    id: "4",
-    title: "Wheat Straw - 3 Tons",
-    description: "Baled wheat straw available. Suitable for animal feed, mushroom cultivation, or biofuel.",
-    type: "Agricultural",
-    subtype: "Straw",
-    quantity: "3 tons",
-    location: "Ludhiana, Punjab",
-    distance: "15 km",
-    price: "₹3,000",
-    date: "5 days ago",
-    image: "/placeholder.svg?height=200&width=300",
-    interests: 5,
-  },
-  {
-    id: "5",
-    title: "Sawdust - 1 Ton",
-    description: "Clean sawdust from furniture manufacturing. Ideal for composting or animal bedding.",
-    type: "Industrial",
-    subtype: "Sawdust",
-    quantity: "1 ton",
-    location: "Jaipur, Rajasthan",
-    distance: "20 km",
-    price: "₹1,200",
-    date: "1 day ago",
-    image: "/placeholder.svg?height=200&width=300",
-    interests: 1,
-  },
-  {
-    id: "6",
-    title: "Cotton Stalks - 4 Tons",
-    description: "Dried cotton stalks available. Can be used for fuel or paper manufacturing.",
-    type: "Agricultural",
-    subtype: "Cotton Stalks",
-    quantity: "4 tons",
-    location: "Ahmedabad, Gujarat",
-    distance: "25 km",
-    price: "₹3,500",
-    date: "2 weeks ago",
-    image: "/placeholder.svg?height=200&width=300",
-    interests: 4,
-  },
-]
 
 type Listing = {
   id: string;
@@ -115,6 +29,8 @@ type Listing = {
   date: string;
   image?: string;
   interests: number;
+  quantity: string;
+  unit: string;
 };
 
 export default function MarketplacePage() {
@@ -282,75 +198,96 @@ export default function MarketplacePage() {
               ) : (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {sortedListings.map((listing) => (
-                <Card key={listing.id} className="overflow-hidden">
-                  <div className="relative">
-                    <img
-                      src={listing.image || "/placeholder.svg"}
-                      alt={listing.title}
-                      className="h-48 w-full object-cover"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-2 top-2 bg-white/80 hover:bg-white/90"
-                      onClick={() => toggleSave(listing.id)}
-                    >
-                      <Heart
-                        className={`h-5 w-5 ${
-                          savedListings.includes(listing.id)
-                            ? "fill-red-500 text-red-500"
-                            : "text-gray-500"
-                        }`}
-                      />
-                      <span className="sr-only">Save listing</span>
-                    </Button>
-                    <Badge className="absolute left-2 top-2 bg-green-600 hover:bg-green-700">
-                      {listing.subtype}
-                    </Badge>
-                  </div>
-                  <CardHeader className="p-4 pb-0">
-                    <CardTitle className="text-lg">{listing.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-2">
-                    <p className="mb-2 line-clamp-2 text-sm text-gray-500">
-                      {listing.description}
-                    </p>
-                    <div className="mt-4 space-y-2 text-sm">
-                      <div className="flex items-center text-gray-500">
-                        <MapPin className="mr-2 h-4 w-4" />
-                        {listing.location} ({listing.distance})
-                      </div>
-                      <div className="flex items-center text-gray-500">
-                        <Calendar className="mr-2 h-4 w-4" />
-                        Listed {listing.date}
-                      </div>
-                      <div className="flex items-center font-medium">
-                        Price: {listing.price}
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex items-center justify-between p-4 pt-0">
-                    <div className="text-sm text-gray-500">
-                      {listing.interests} interested
-                    </div>
-                    <div className="flex justify-end mt-2">
-                          <button
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                            onClick={() => handleAddToCart(listing)}
+                <Dialog key={listing.id}>
+                  <DialogTrigger asChild>
+                    <div>
+                      <Card className="overflow-hidden">
+                        <div className="relative">
+                          <img
+                            src={listing.image || "/placeholder.svg"}
+                            alt={listing.title}
+                            className="h-48 w-full object-cover"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute right-2 top-2 bg-white/80 hover:bg-white/90"
+                            onClick={(e) => { e.stopPropagation(); toggleSave(listing.id); }}
                           >
-                            Add to Cart
-                          </button>
+                            <Heart
+                              className={`h-5 w-5 ${
+                                savedListings.includes(listing.id)
+                                  ? "fill-red-500 text-red-500"
+                                  : "text-gray-500"
+                              }`}
+                            />
+                            <span className="sr-only">Save listing</span>
+                          </Button>
+                          <Badge className="absolute left-2 top-2 bg-green-600 hover:bg-green-700">
+                            {listing.subtype}
+                          </Badge>
+                        </div>
+                        <CardHeader className="p-4 pb-0">
+                          <CardTitle className="text-lg">{listing.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-2">
+                          <p className="mb-2 line-clamp-2 text-sm text-gray-500">
+                            {listing.description}
+                          </p>
+                          <div className="mt-4 space-y-2 text-sm">
+                            <div className="flex items-center text-gray-500">
+                              <MapPin className="mr-2 h-4 w-4" />
+                              {listing.location} ({listing.distance})
+                            </div>
+                            <div className="flex items-center text-gray-500">
+                              <Calendar className="mr-2 h-4 w-4" />
+                              Listed {listing.date}
+                            </div>
+                            <div className="flex items-center font-medium justify-between">
+                              <span className="text-left">Qty: {listing.quantity} {listing.unit}</span>
+                              <span className="ml-auto text-right">₹{listing.price}</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <CardFooter className="flex items-center justify-between p-4 pt-0">
+                          <div className="text-sm text-gray-500">
+                            {listing.interests} 
+                            <span className="ml-2  text-blue-600 hover:text-blue-800 cursor-pointer">View more</span>
+                          </div>
+                          <div className="flex justify-end mt-2">
+                                <button
+                                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                                  onClick={(e) => { e.stopPropagation(); handleAddToCart(listing); }}
+                                >
+                                  Add to Cart
+                                </button>
+                          </div>
+                        </CardFooter>
+                      </Card>
                     </div>
-                  </CardFooter>
-                </Card>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>{listing.title}</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex flex-col gap-2 mt-2">
+                      <img src={listing.image || "/placeholder.svg"} alt={listing.title} className="w-full h-48 object-cover rounded" />
+                      <div><strong>Description:</strong> {listing.description}</div>
+                      <div><strong>Subtype:</strong> {listing.subtype}</div>
+                      <div><strong>Quantity:</strong> {listing.quantity} {listing.unit}</div>
+                      <div><strong>Location:</strong> {listing.location}</div>
+                      <div><strong>Price:</strong> ₹{listing.price}</div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               ))}
-                </div>
-              )}
             </div>
-          </div>
+          )}
         </div>
-      </main>
-      <Footer />
+      </div>
     </div>
-  )
+  </main>
+  <Footer />
+</div>
+  );
 }
