@@ -205,7 +205,7 @@ export default function MarketplacePage() {
                       <Card className="overflow-hidden">
                         <div className="relative">
                           <img
-                            src={listing.image || "/placeholder.svg"}
+                            src={listing.image || "https://www.cn-pellet.com/d/file/p/2019/11-17/ece68421685b9b8a4694bb0ab7178ed2.jpg"}
                             alt={listing.title}
                             className="h-48 w-full object-cover"
                           />
