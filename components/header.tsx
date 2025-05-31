@@ -201,15 +201,13 @@ export function Header() {
             >
               About
             </Link>
-            {status === "authenticated" && user?.role === "buyer" && (
-              <Link
-                href="/marketplace"
-                className="text-sm font-medium hover:text-green-600 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Marketplace
-              </Link>
-            )}
+            <Link
+              href="/marketplace"
+              className="text-sm font-medium hover:text-green-600 transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Marketplace
+            </Link>
             <Link
               href="/contact"
               className="text-sm font-medium hover:text-green-600 transition-colors"
