@@ -98,58 +98,10 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Impact */}
-        <section className="py-16 md:py-24">
-          <div className="container px-4 md:px-6">
-            <div className="mb-12 text-center">
-              <h2 className="text-3xl font-bold">Our Impact</h2>
-              <p className="mx-auto mt-4 max-w-[700px] text-gray-500">
-                AgriConnect is making a significant difference in waste management and sustainability efforts.
-              </p>
-            </div>
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <Recycle className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold">Environmental Impact</h3>
-                  <p className="text-gray-500">
-                    Over 10,000 tons of agricultural waste diverted from landfills and repurposed for sustainable use,
-                    reducing greenhouse gas emissions and environmental pollution.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <Users className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold">Community Impact</h3>
-                  <p className="text-gray-500">
-                    Supporting over 5,000 farmers and 500 businesses in creating sustainable waste management solutions
-                    and additional income streams from previously discarded materials.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <BarChart className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold">Economic Impact</h3>
-                  <p className="text-gray-500">
-                    Generated over ₹50 million in additional revenue for farmers and saved industries approximately ₹30
-                    million in raw material costs through our waste exchange platform.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+     
 
         {/* Team */}
-        <section className="bg-green-50 py-16 md:py-24">
+        <section className="py-16 md:py-24">
           <div className="container px-4 md:px-6">
             <div className="mb-12 text-center">
               <h2 className="text-3xl font-bold">Our Team</h2>
@@ -161,31 +113,35 @@ export default function AboutPage() {
             <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {[
                 {
-                  name: "Dr. Anita Sharma",
-                  role: "Founder & CEO",
-                  bio: "Agricultural scientist with 15+ years of experience in sustainable farming practices.",
+                  name: "Renuka Darapureddy",
+                  role: "Developer",
+                  bio: "Enthusiast in Data Science and Artificial Intelligence with a passion for learning and innovation.Keen on exploring data-driven solutions and intelligent technologies to solve real-world problems.",
+                  image: "renu.jpg",
                 },
                 {
-                  name: "Rajiv Patel",
-                  role: "CTO",
-                  bio: "Tech innovator with expertise in building scalable platforms for rural communities.",
+                  name: "Garlapati Priya sri",
+                  role: "Developer",
+                  bio: "Passionate about Web Development with a focus on creating responsive and user-friendly websites.Interested in building dynamic web applications using modern tools and technologies.",
+                  image: "priya.jpg",
                 },
                 {
-                  name: "Meera Krishnan",
-                  role: "Head of Operations",
-                  bio: "Supply chain expert specializing in agricultural logistics and waste management.",
+                  name: "G.Pujitha",
+                  role: "Developer",
+                  bio: "Enthusiastic about Cloud Computing and its role in scalable, on-demand technology solutions.Interested in learning cloud platforms and deploying efficient, secure cloud-based applications.",
+                  image: "pujitha.jpg",
                 },
                 {
-                  name: "Vikram Singh",
-                  role: "Environmental Specialist",
-                  bio: "Environmental engineer focused on maximizing the sustainable reuse of agricultural waste.",
+                  name: "Madakam Bindu Madhavi",
+                  role: "Developer",
+                  bio: "Passionate about Web Development and Data Science, with a drive to build intelligent, data-driven web applications.Eager to integrate analytics and modern web technologies to create impactful digital solutions.",
+                  image: "bindu.jpg",
                 },
               ].map((member, index) => (
                 <Card key={index}>
                   <CardContent className="p-6 text-center">
                     <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-full bg-gray-200">
                       <img
-                        src={`/placeholder.svg?height=96&width=96&text=${member.name.charAt(0)}`}
+                        src={member.image}
                         alt={member.name}
                         className="h-full w-full object-cover"
                       />
@@ -213,7 +169,7 @@ export default function AboutPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link href="/register">
+                <Link href="/">
                   <Button size="lg" className="bg-green-600 hover:bg-green-700">
                     Get Started
                   </Button>

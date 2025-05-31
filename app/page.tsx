@@ -26,7 +26,7 @@ export default function Home() {
                 Start turning waste into worth today. Join our growing community of sustainable businesses and farmers.
               </p>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link href="/register">
+                <Link href="/">
                   <Button size="lg" className="bg-green-600 hover:bg-green-700">
                     Get Started
                   </Button>
