@@ -35,6 +35,7 @@ export default function NewListingPage() {
       price: formData.get("price"),
       location,
       sellerId: user?.id, // Assuming user ID is available from auth context
+      contactNumber: formData.get("contactNumber"),
     };
 
     try {
@@ -91,6 +92,17 @@ export default function NewListingPage() {
                     id="title"
                     name="title"
                     placeholder="e.g., Rice Husk - 2 Tons"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contactNumber">Contact Number</Label>
+                  <Input
+                    id="contactNumber"
+                    name="contactNumber"
+                    placeholder="e.g., 9876543210"
+                    type="tel"
+                    pattern="[0-9]{10}"
                     required
                   />
                 </div>

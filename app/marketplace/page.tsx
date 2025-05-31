@@ -31,6 +31,7 @@ type Listing = {
   interests: number;
   quantity: string;
   unit: string;
+  contactNumber?: string;
 };
 
 export default function MarketplacePage() {
@@ -239,6 +240,10 @@ export default function MarketplacePage() {
                               <MapPin className="mr-2 h-4 w-4" />
                               {listing.location} ({listing.distance})
                             </div>
+                            <div className="flex items-center font-medium justify-between">
+                              <span className="text-left">Contact Seller: {listing.contactNumber}</span>
+                            </div>
+
                             <div className="flex items-center text-gray-500">
                               <Calendar className="mr-2 h-4 w-4" />
                               Listed {listing.date}
@@ -277,6 +282,9 @@ export default function MarketplacePage() {
                       <div><strong>Quantity:</strong> {listing.quantity} {listing.unit}</div>
                       <div><strong>Location:</strong> {listing.location}</div>
                       <div><strong>Price:</strong> ₹{listing.price}</div>
+                      {listing.contactNumber && (
+                        <div><strong>Contact Number:</strong> {listing.contactNumber}</div>
+                      )}
                     </div>
                   </DialogContent>
                 </Dialog>
