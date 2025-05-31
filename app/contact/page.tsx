@@ -113,8 +113,8 @@ export default function ContactPage() {
                     <div className="mb-4 rounded-full bg-green-100 p-3">
                       <MapPin className="h-6 w-6 text-green-600" />
                     </div>
-                    <CardTitle className="mb-2">Office</CardTitle>
-                    <CardDescription>Come say hello at our office</CardDescription>
+                    <CardTitle className="mb-2">College</CardTitle>
+                    <CardDescription>Come say hello at our college</CardDescription>
                     <p className="mt-2 font-medium">Bhimavaram, Andhra Pradesh, India</p>
                   </CardContent>
                 </Card>
