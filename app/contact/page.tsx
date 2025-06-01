@@ -14,6 +14,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Mail, MapPin, Phone, MessageSquare, CheckCircle } from "lucide-react"
 import { motion } from "framer-motion";
+import { supabase } from "@/lib/supabaseClient"
 
 export default function ContactPage() {
   const [formState, setFormState] = useState({
@@ -36,22 +37,41 @@ export default function ContactPage() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsSubmitted(true)
-      setFormState({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-        inquiryType: "",
-      })
-    }, 1500)
-  }
+    try {
+      const { data, error } = await supabase.from("contact_messages").insert([
+        {
+          full_name: formState.name,
+          email: formState.email,
+          inquiry_type: formState.inquiryType,
+          subject: formState.subject,
+          message: formState.message,
+        },
+      ]);
+
+      if (error) {
+        console.error("Error inserting data:", error);
+        alert("Failed to submit the form. Please try again.");
+      } else {
+        console.log("Data inserted successfully:", data);
+        setIsSubmitted(true);
+        setFormState({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+          inquiryType: "",
+        });
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      alert("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
