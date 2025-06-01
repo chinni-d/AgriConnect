@@ -270,19 +270,24 @@ export default function NewListingPage() {
               <CardHeader>
                 <CardTitle>Images</CardTitle>
                 <CardDescription>
-                  Upload images of your waste (max 5 images)
+                  Upload image of your waste 
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300 hover:border-gray-400">
+                    <label className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300 hover:border-gray-400">
                     <Upload className="mb-2 h-6 w-6 text-gray-400" />
                     <p className="text-xs text-gray-500">Click to upload</p>
-                  </div>
-                  <div className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300 hover:border-gray-400">
-                    <Upload className="mb-2 h-6 w-6 text-gray-400" />
-                    <p className="text-xs text-gray-500">Click to upload</p>
-                  </div>
+                    <input
+                      type="file"
+                      name="images"
+                      accept="image/png, image/jpeg"
+                      multiple
+                      className="hidden"
+                      max={5}
+                    />
+                    </label>
+                  
                 </div>
                 <p className="mt-2 text-xs text-gray-500">
                   Supported formats: JPG, PNG. Max file size: 5MB.
