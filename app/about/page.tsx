@@ -44,8 +44,8 @@ export default function AboutPage() {
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
               <motion.div
                 className="overflow-hidden"
-                initial={{ opacity: 0, x: -100 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.8 }}
               >
@@ -66,8 +66,8 @@ export default function AboutPage() {
               </motion.div>
               <motion.div
                 className="overflow-hidden"
-                initial={{ opacity: 0, x: 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.8 }}
               >
@@ -149,73 +149,80 @@ export default function AboutPage() {
                 management.
               </p>
             </div>
-            <style jsx>{`
-              .card-content {
-                min-height: 350px; /* Allow cards to expand dynamically */
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-              }
-            `}</style>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
               {[
                 {
                   name: "Renuka Darapureddy",
-                  role: "Developer",
-                  bio: "Enthusiast in Data Science and Artificial Intelligence with a passion for learning and innovation.Keen on exploring data-driven solutions and intelligent technologies to solve real-world problems.",
+                  role: "Data Science & AI Developer",
+                  bio: "Enthusiast in Data Science and Artificial Intelligence with a passion for learning and innovation. Keen on exploring data-driven solutions and intelligent technologies to solve real-world problems.",
                   image: "renu.jpg",
                 },
                 {
                   name: "Garlapati Priya sri",
-                  role: "Developer",
-                  bio: "Passionate about Web Development with a focus on creating responsive and user-friendly websites.Interested in building dynamic web applications using modern tools and technologies.",
+                  role: "Web Developer",
+                  bio: "Passionate about Web Development with a focus on creating responsive and user-friendly websites. Interested in building dynamic web applications using modern tools and technologies.",
                   image: "priya.jpg",
                 },
                 {
                   name: "G.Pujitha",
-                  role: "Developer",
-                  bio: "Enthusiastic about Cloud Computing and its role in scalable, on-demand technology solutions.Interested in learning cloud platforms and deploying efficient, secure cloud-based applications.",
+                  role: "Cloud Computing Developer",
+                  bio: "Enthusiastic about Cloud Computing and its role in scalable, on-demand technology solutions. Interested in learning cloud platforms and deploying efficient, secure cloud-based applications.",
                   image: "pujitha.jpg",
                 },
                 {
                   name: "Madakam Bindu Madhavi",
-                  role: "Developer",
+                  role: "Full Stack Developer",
                   bio: "Passionate about Web Development and Data Science, with a drive to build intelligent, data-driven web applications.",
                   image: "bindu.jpg",
                 },
                 {
                   name: "Gangavarapu Jaya Sri Durga",
-                  role: "Developer",
+                  role: "Data Analytics Developer",
                   bio: "Interested in Data Analytics with a passion for uncovering insights through data exploration and visualization.",
                   image: "jaya.jpg",
                 },
-                
               ].map((member, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 50 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: false, amount: 0.2 }}
-                  whileHover={{ scale: 1.1, rotate: 2 }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
+                  whileHover={{ scale: 1.03, rotate: 1 }}
+                  transition={{ duration: 0.4, delay: index * 0.2 }}
+                  className="group"
                 >
-                  <Card
-                    style={{ height: "350px" }}
-                  >
-                    <CardContent className="p-6 text-center">
-                      <div
-                        className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-full bg-gray-200"
-                        style={{ transformOrigin: "center", overflow: "hidden" }}
-                      >
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="h-full w-full object-cover"
-                        />
+                  <Card className="h-[400px] max-w-full overflow-hidden bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <CardContent className="p-6 text-center h-full flex flex-col">
+                      {/* Profile Image */}
+                      <div className="mx-auto mb-4 flex-shrink-0">
+                        <div className="h-20 w-20 overflow-hidden rounded-full bg-gray-100 ring-2 ring-gray-200 group-hover:ring-green-400 transition-all duration-300">
+                          <img
+                            src={member.image}
+                            alt={member.name}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              e.currentTarget.src = '/placeholder.svg?height=80&width=80';
+                            }}
+                          />
+                        </div>
                       </div>
-                      <h3 className="mb-1 text-lg font-bold">{member.name}</h3>
-                      <p className="mb-2 text-sm text-green-600">{member.role}</p>
-                      <p className="text-sm text-gray-500">{member.bio}</p>
+                      
+                      {/* Content */}
+                      <div className="flex-1 flex flex-col">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1 break-words">
+                          {member.name}
+                        </h3>
+                        
+                        <div className="mb-3">
+                          <span className="inline-block px-3 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                            {member.role}
+                          </span>
+                        </div>
+                        
+                        <p className="text-sm text-gray-600 leading-relaxed flex-1">
+                          {member.bio}
+                        </p>
+                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>
