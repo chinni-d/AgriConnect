@@ -176,11 +176,11 @@ export default function ContactPage() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
-                          <Label htmlFor="name">Full Name</Label>
+                          <Label htmlFor="name">Name</Label>
                           <Input
                             id="name"
                             name="name"
-                            placeholder="John Doe"
+                            placeholder="Enter your full name"
                             value={formState.name}
                             onChange={handleChange}
                             required
@@ -192,7 +192,7 @@ export default function ContactPage() {
                             id="email"
                             name="email"
                             type="email"
-                            placeholder="john@example.com"
+                            placeholder="Enter your email address"
                             value={formState.email}
                             onChange={handleChange}
                             required
