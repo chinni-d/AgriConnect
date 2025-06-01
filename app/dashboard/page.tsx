@@ -39,7 +39,6 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-muted-foreground">{user?.role === "seller" ? activeListingsCount : '--'}</div>
-            <p className="text-xs text-muted-foreground">No data yet</p>
           </CardContent>
         </Card>
         <Card>
