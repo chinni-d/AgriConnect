@@ -12,7 +12,7 @@ export function HeroSection() {
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                 AgriConnect: <span className="text-green-600">Waste to Worth</span>
               </h1>
-              <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="max-w-[600px] text-gray-500 md:text-base/relaxed lg:text-base/relaxed xl:text-base/relaxed ">
                 Connecting farmers and industries with waste buyers and recyclers to promote sustainable waste
                 management and a circular economy.
               </p>

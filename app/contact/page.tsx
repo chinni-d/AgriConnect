@@ -95,7 +95,7 @@ export default function ContactPage() {
           <div className="container px-4 md:px-6">
             <div className="grid gap-8 md:grid-cols-3">
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, rotate: 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <Card>
@@ -110,7 +110,7 @@ export default function ContactPage() {
                 </Card>
               </motion.div>
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, rotate: 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <Card>
@@ -125,7 +125,7 @@ export default function ContactPage() {
                 </Card>
               </motion.div>
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, rotate: 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <Card>

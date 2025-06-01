@@ -9,7 +9,7 @@ export function HowItWorks() {
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-green-100 px-3 py-1 text-sm text-green-600">Process</div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">How AgriConnect Works</h2>
-            <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="max-w-[900px] text-gray-500 md:text-base/relaxed lg:text-base/relaxed xl:text-base/relaxed">
               Our platform makes it easy to connect waste generators with waste users in just a few simple steps.
             </p>
           </div>

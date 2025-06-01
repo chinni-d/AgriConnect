@@ -244,7 +244,7 @@ export default function AboutPage() {
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="mx-auto max-w-[700px] text-gray-500 md:text-base/relaxed lg:text-base/relaxed xl:text-base/relaxed">
                   Be part of the solution. Start turning waste into worth today.
                 </p>
               </motion.div>

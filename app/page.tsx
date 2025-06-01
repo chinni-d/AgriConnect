@@ -41,7 +41,7 @@ export default function Home() {
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <p className="max-w-[700px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="max-w-[700px] text-gray-600 md:text-base/relaxed lg:text-base/relaxed xl:text-base/relaxed">
                   Start turning waste into worth today. Join our growing community of sustainable businesses and farmers.
                 </p>
               </motion.div>
