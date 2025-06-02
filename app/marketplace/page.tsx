@@ -48,41 +48,94 @@ export default function MarketplacePage() {
     setLoading(true);
     fetch(`/api/listings?status=active`)
       .then(res => res.json())
-      .then(data => setListings(data.listings || []))
+      .then(data => {
+        // Log the actual data received from the API
+        console.log("Fetched listings data:", data); 
+        setListings(data.listings || [])
+      })
       .finally(() => setLoading(false));
   }, []);
 
   // Filter listings based on search and filters
   const filteredListings = listings.filter((listing: any) => {
-    const matchesSearch =
-      listing?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      listing?.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      listing?.subtype?.toLowerCase().includes(searchTerm.toLowerCase());
+    // Log each listing being processed
+    // console.log("Filtering listing:", listing);
 
-    const matchesType = wasteType === "all" || listing?.type === wasteType;
-    const matchesDistance = Number.parseInt(listing?.distance || "0") <= maxDistance[0];
+    const searchTermLower = searchTerm.toLowerCase();
+    const matchesSearch =
+      searchTerm === "" || // Allow all if search term is empty
+      listing?.title?.toLowerCase().includes(searchTermLower) ||
+      listing?.description?.toLowerCase().includes(searchTermLower) ||
+      listing?.subtype?.toLowerCase().includes(searchTermLower);
+
+    // Assuming the API returns 'wasteType' based on schema.ts, but Listing type has 'type'
+    // Let's try to check both or standardize. For now, let's assume listing object has 'wasteType'
+    // If your listing objects actually have a 'type' property, change listing.wasteType to listing.type
+    const typeToCompare = listing.wasteType || listing.type; // Handle potential variations
+    const matchesType = 
+      wasteType === "all" || 
+      (typeToCompare && typeToCompare.toLowerCase() === wasteType.toLowerCase());
+
+    // Ensure listing.distance is a string and can be parsed, or default to a high number if not applicable
+    const distanceString = String(listing.distance || '0'); // Ensure it's a string
+    const distanceValue = Number.parseInt(distanceString.replace(/[^0-9]/g, ''), 10) || 0; // Extract numbers and parse
+    const matchesDistance = distanceValue <= maxDistance[0];
+    
+    // console.log({
+    //   id: listing.id,
+    //   searchTerm,
+    //   matchesSearch,
+    //   wasteType,
+    //   typeToCompare,
+    //   matchesType,
+    //   maxDistance: maxDistance[0],
+    //   distanceValue,
+    //   matchesDistance
+    // });
 
     return matchesSearch && matchesType && matchesDistance;
   });
+  
+  useEffect(() => {
+    console.log("Listings state updated:", listings);
+  }, [listings]);
+
+  useEffect(() => {
+    console.log("Filters changed:", { searchTerm, wasteType, maxDistance });
+    // console.log("Filtered Listings:", filteredListings); // This will log too frequently during typing
+  }, [searchTerm, wasteType, maxDistance, filteredListings]);
+
 
   // Sort listings
   const sortedListings = [...filteredListings].sort((a: any, b: any) => {
     if (sortBy === "newest") {
-      return a?.date?.includes("day") && b?.date?.includes("week") ? -1 : 1;
+      // Use createdAt field from the database schema
+      const dateA = new Date(a.createdAt || a.date).getTime();
+      const dateB = new Date(b.createdAt || b.date).getTime();
+      if (isNaN(dateA) && isNaN(dateB)) return 0;
+      if (isNaN(dateA)) return 1; // Put invalid dates at the end
+      if (isNaN(dateB)) return -1; // Put invalid dates at the end
+      return dateB - dateA; // Newest first (descending)
     } else if (sortBy === "oldest") {
-      return a?.date?.includes("week") && b?.date?.includes("day") ? -1 : 1;
+      // Use createdAt field from the database schema
+      const dateA = new Date(a.createdAt || a.date).getTime();
+      const dateB = new Date(b.createdAt || b.date).getTime();
+      if (isNaN(dateA) && isNaN(dateB)) return 0;
+      if (isNaN(dateA)) return 1; // Put invalid dates at the end
+      if (isNaN(dateB)) return -1; // Put invalid dates at the end
+      return dateA - dateB; // Oldest first (ascending)
     } else if (sortBy === "price_low") {
-      return (
-        Number.parseInt(a?.price?.replace("₹", "").replace(",", "")) -
-        Number.parseInt(b?.price?.replace("₹", "").replace(",", ""))
-      );
+      const priceA = typeof a.price === 'string' ? parseFloat(a.price.replace(/[^0-9.-]+/g, "")) : a.price || 0;
+      const priceB = typeof b.price === 'string' ? parseFloat(b.price.replace(/[^0-9.-]+/g, "")) : b.price || 0;
+      return priceA - priceB;
     } else if (sortBy === "price_high") {
-      return (
-        Number.parseInt(b?.price?.replace("₹", "").replace(",", "")) -
-        Number.parseInt(a?.price?.replace("₹", "").replace(",", ""))
-      );
+      const priceA = typeof a.price === 'string' ? parseFloat(a.price.replace(/[^0-9.-]+/g, "")) : a.price || 0;
+      const priceB = typeof b.price === 'string' ? parseFloat(b.price.replace(/[^0-9.-]+/g, "")) : b.price || 0;
+      return priceB - priceA;
     } else if (sortBy === "distance") {
-      return Number.parseInt(a?.distance || "0") - Number.parseInt(b?.distance || "0");
+      const distanceA = Number.parseInt(String(a.distance || '0').replace(/[^0-9]/g, ''), 10) || 0;
+      const distanceB = Number.parseInt(String(b.distance || '0').replace(/[^0-9]/g, ''), 10) || 0;
+      return distanceA - distanceB;
     }
     return 0;
   });
