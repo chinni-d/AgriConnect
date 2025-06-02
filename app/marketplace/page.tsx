@@ -204,86 +204,81 @@ export default function MarketplacePage() {
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {sortedListings.map((listing) => (
                 <Dialog key={listing.id}>
-                  <DialogTrigger asChild>
-                    <div>
-                      <Card className="overflow-hidden">
-                        <div className="relative">
-                          <img
-                            src={listing.image || "https://www.cn-pellet.com/d/file/p/2019/11-17/ece68421685b9b8a4694bb0ab7178ed2.jpg"}
-                            alt={listing.title}
-                            className="h-48 w-full object-cover"
-                          />
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-2 top-2 bg-white/80 hover:bg-white/90"
-                            onClick={(e) => { e.stopPropagation(); toggleSave(listing.id); }}
-                          >
-                            <Heart
-                              className={`h-5 w-5 ${
-                                savedListings.includes(listing.id)
-                                  ? "fill-red-500 text-red-500"
-                                  : "text-gray-500"
-                              }`}
-                            />
-                            <span className="sr-only">Save listing</span>
-                          </Button>
-                          <Badge className="absolute left-2 top-2 bg-green-600 hover:bg-green-700">
-                            {listing.subtype}
-                          </Badge>
-                        </div>
-                        <CardHeader className="p-4 pb-0">
-                          <CardTitle className="text-lg">{listing.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 pt-2">
-                          <p className="mb-2 line-clamp-2 text-sm text-gray-500">
-                            {listing.description}
-                          </p>
-                          <div className="mt-4 space-y-2 text-sm">
-                            <div className="flex items-center text-gray-500">
-                              <MapPin className="mr-2 h-4 w-4" />
-                              {listing.location} ({listing.distance})
-                            </div>
-                         
-
-                <div className="flex items-center text-gray-500">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Listed {listing.date}
-                </div>
-                <div className="flex items-center font-medium justify-between">
-                  <span className="text-left">Qty: {listing.quantity} {listing.unit}</span>
-                  <span className="ml-auto text-right">₹{listing.price}</span>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex items-center justify-between p-4 pt-0">
-              <div className="text-sm text-gray-500">
-                {listing.interests} 
-                <span
-                  className="ml-2  text-blue-600 hover:text-blue-800 cursor-pointer"
-                  onClick={(e) => {
-                    if (!user) {
-                      e.stopPropagation();
-                      window.location.href = "/login";
-                    }
-                    // If logged in, do not stop propagation so Dialog opens
-                  }}
-                >
-                  View more
-                </span>
-              </div>
-              <div className="flex justify-end mt-2">
-                <button
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                  onClick={(e) => { e.stopPropagation(); handleAddToCart(listing); }}
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </CardFooter>
-                      </Card>
+                  <Card className="overflow-hidden">
+                    <div className="relative">
+                      <img
+                        src={listing.image || "https://www.cn-pellet.com/d/file/p/2019/11-17/ece68421685b9b8a4694bb0ab7178ed2.jpg"}
+                        alt={listing.title}
+                        className="h-48 w-full object-cover"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-2 top-2 bg-white/80 hover:bg-white/90"
+                        onClick={() => toggleSave(listing.id)}
+                      >
+                        <Heart
+                          className={`h-5 w-5 ${
+                            savedListings.includes(listing.id)
+                              ? "fill-red-500 text-red-500"
+                              : "text-gray-500"
+                          }`}
+                        />
+                        <span className="sr-only">Save listing</span>
+                      </Button>
+                      <Badge className="absolute left-2 top-2 bg-green-600 hover:bg-green-700">
+                        {listing.subtype}
+                      </Badge>
                     </div>
-                  </DialogTrigger>
+                    <CardHeader className="p-4 pb-0">
+                      <CardTitle className="text-lg">{listing.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-2">
+                      <p className="mb-2 line-clamp-2 text-sm text-gray-500">
+                        {listing.description}
+                      </p>
+                      <div className="mt-4 space-y-2 text-sm">
+                        <div className="flex items-center text-gray-500">
+                          <MapPin className="mr-2 h-4 w-4" />
+                          {listing.location} ({listing.distance})
+                        </div>
+                        <div className="flex items-center text-gray-500">
+                          <Calendar className="mr-2 h-4 w-4" />
+                          Listed {listing.date}
+                        </div>
+                        <div className="flex items-center font-medium justify-between">
+                          <span className="text-left">Qty: {listing.quantity} {listing.unit}</span>
+                          <span className="ml-auto text-right">₹{listing.price}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="flex items-center justify-between p-4 pt-0">
+                      <div className="text-sm text-gray-500">
+                        {listing.interests}
+                        <DialogTrigger asChild>
+                          <span
+                            className="ml-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+                            onClick={(e) => {
+                              if (!user) {
+                                e.preventDefault();
+                                window.location.href = "/login";
+                              }
+                            }}
+                          >
+                            View more
+                          </span>
+                        </DialogTrigger>
+                      </div>
+                      <div className="flex justify-end mt-2">
+                        <button
+                          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                          onClick={() => handleAddToCart(listing)}
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </CardFooter>
+                  </Card>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>{listing.title}</DialogTitle>
