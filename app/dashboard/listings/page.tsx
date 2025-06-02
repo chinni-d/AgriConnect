@@ -21,13 +21,78 @@ export default function ListingsPage() {
   const [listings, setListings] = useState<Array<any>>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const handleMarkAsSold = async (listingId: string) => {
+    try {
+      const response = await fetch(`/api/listings/${listingId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'sold' }),
+      });
+
+      if (response.ok) {
+        // Refresh the listings
+        fetchListings();
+      } else {
+        console.error('Failed to mark listing as sold');
+      }
+    } catch (error) {
+      console.error('Error marking listing as sold:', error);
+    }
+  };
+
+  const handleMarkAsActive = async (listingId: string) => {
+    try {
+      const response = await fetch(`/api/listings/${listingId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'active' }),
+      });
+
+      if (response.ok) {
+        // Refresh the listings
+        fetchListings();
+      } else {
+        console.error('Failed to mark listing as active');
+      }
+    } catch (error) {
+      console.error('Error marking listing as active:', error);
+    }
+  };
+
+  const handleDeleteListing = async (listingId: string) => {
+    if (confirm('Are you sure you want to delete this listing?')) {
+      try {
+        const response = await fetch(`/api/listings/${listingId}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          // Refresh the listings
+          fetchListings();
+        } else {
+          console.error('Failed to delete listing');
+        }
+      } catch (error) {
+        console.error('Error deleting listing:', error);
+      }
+    }
+  };
+
+  const fetchListings = () => {
     if (!user?.id) return;
     setLoading(true);
     fetch(`/api/listings?seller=${user.id}`)
       .then(res => res.json())
       .then(data => setListings(data.listings || []))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchListings();
   }, [user?.id]);
 
   // Filter listings based on search and active tab
@@ -92,7 +157,7 @@ export default function ListingsPage() {
                 <Card key={listing.id}>
                   <div className="relative">
                     <img
-                      src={listing.image || "/placeholder.svg"}
+                      src={listing.image || "https://www.cn-pellet.com/d/file/p/2019/11-17/ece68421685b9b8a4694bb0ab7178ed2.jpg"}
                       alt={listing.title}
                       className="h-48 w-full object-cover"
                     />
@@ -117,15 +182,12 @@ export default function ListingsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/listings/${listing.id}/edit`}>Edit Listing</Link>
-                        </DropdownMenuItem>
                         {listing.status === "active" ? (
-                          <DropdownMenuItem>Mark as Sold</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleMarkAsSold(listing.id)}>Mark as Sold</DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem>Mark as Active</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleMarkAsActive(listing.id)}>Mark as Active</DropdownMenuItem>
                         )}
-                        <DropdownMenuItem className="text-red-600">Delete Listing</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleDeleteListing(listing.id)} className="text-red-600">Delete Listing</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -141,7 +203,7 @@ export default function ListingsPage() {
                       </div>
                       <div className="flex items-center text-gray-500">
                         <Calendar className="mr-2 h-4 w-4" />
-                        Listed {listing.date}
+                        {listing.status === 'sold' && listing.updatedAt ? `Sold on ${new Date(listing.updatedAt).toLocaleDateString()}` : `Listed ${listing.date}`}
                       </div>
                       <div className="flex items-center font-medium">Price: {listing.price}</div>
                     </div>
@@ -170,11 +232,11 @@ export default function ListingsPage() {
                   {/* Similar card structure as above */}
                   <div className="relative">
                     <img
-                      src={listing.image || "/placeholder.svg"}
+                      src={listing.image || "https://www.cn-pellet.com/d/file/p/2019/11-17/ece68421685b9b8a4694bb0ab7178ed2.jpg"}
                       alt={listing.title}
                       className="h-48 w-full object-cover"
                     />
-                    <Badge className="absolute left-2 top-2 bg-gray-600 hover:bg-gray-700">Sold</Badge>
+                    <Badge className="absolute left-2 top-2 bg-green-600 hover:bg-green-700 ">Sold</Badge>
                   </div>
                   <CardHeader className="p-4 pb-0">
                     <CardTitle className="text-lg">{listing.title}</CardTitle>
@@ -188,7 +250,7 @@ export default function ListingsPage() {
                       </div>
                       <div className="flex items-center text-gray-500">
                         <Calendar className="mr-2 h-4 w-4" />
-                        Sold on May 15, 2023
+                        {listing.status === 'sold' && listing.updatedAt ? `Sold on ${new Date(listing.updatedAt).toLocaleDateString()}` : (listing.date ? `Listed ${listing.date}` : 'Date not available')}
                       </div>
                       <div className="flex items-center font-medium">Price: {listing.price}</div>
                     </div>
@@ -198,7 +260,7 @@ export default function ListingsPage() {
                       <Users className="mr-1 h-4 w-4" />
                       {listing.interests} were interested
                     </div>
-                    <Button size="sm" variant="outline" asChild>
+                    <Button size="sm" variant="outline" className="bg-green-600 hover:bg-green-700 text-white" asChild>
                       <Link href={`/dashboard/listings/${listing.id}`}>View Details</Link>
                     </Button>
                   </CardFooter>
@@ -214,7 +276,7 @@ export default function ListingsPage() {
                 {/* Similar card structure as above */}
                 <div className="relative">
                   <img
-                    src={listing.image || "/placeholder.svg"}
+                    src={listing.image || "https://www.cn-pellet.com/d/file/p/2019/11-17/ece68421685b9b8a4694bb0ab7178ed2.jpg"}
                     alt={listing.title}
                     className="h-48 w-full object-cover"
                   />
@@ -238,7 +300,7 @@ export default function ListingsPage() {
                     </div>
                     <div className="flex items-center text-gray-500">
                       <Calendar className="mr-2 h-4 w-4" />
-                      Listed {listing.date}
+                      {listing.status === 'sold' && listing.updatedAt ? `Sold on ${new Date(listing.updatedAt).toLocaleDateString()}` : (listing.date ? `Listed ${listing.date}` : 'Date not available')}
                     </div>
                     <div className="flex items-center font-medium">Price: {listing.price}</div>
                   </div>
@@ -251,7 +313,7 @@ export default function ListingsPage() {
                   <Button
                     size="sm"
                     className={
-                      listing.status === "active" ? "bg-green-600 hover:bg-green-700" : "bg-gray-600 hover:bg-gray-700"
+                      listing.status === "active" ? "bg-green-600 hover:bg-green-700" : "bg-green-600 hover:bg-green-700"
                     }
                     asChild
                   >

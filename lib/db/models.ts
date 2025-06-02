@@ -108,24 +108,47 @@ export const WasteListingModel = {
   },
 
   findById: async (id: string): Promise<WasteListing | null> => {
-    return inMemoryDb.listings.get(id) || null
+    const { data, error } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error(`Error fetching listing by id ${id}:`, error);
+      return null;
+    }
+    return data as WasteListing | null;
   },
 
   update: async (id: string, listingData: Partial<WasteListing>): Promise<WasteListing | null> => {
-    const listing = inMemoryDb.listings.get(id)
-    if (!listing) return null
+    const { data, error } = await supabase
+      .from("listings")
+      .update({ ...listingData, updatedAt: new Date().toISOString() })
+      .eq("id", id)
+      .select();
 
-    const updatedListing: WasteListing = {
-      ...listing,
-      ...listingData,
-      updatedAt: new Date(),
+    if (error) {
+      console.error(`Error updating listing ${id}:`, error);
+      throw new Error(`Failed to update listing: ${error.message}`);
     }
-    inMemoryDb.listings.set(id, updatedListing)
-    return updatedListing
+    if (!data || data.length === 0) {
+      console.warn(`Listing with id ${id} not found for update.`);
+      return null;
+    }
+    return data[0] as WasteListing;
   },
 
   delete: async (id: string): Promise<boolean> => {
-    return inMemoryDb.listings.delete(id)
+    const { error } = await supabase
+      .from("listings")
+      .delete()
+      .eq("id", id);
+    if (error) {
+      console.error(`Error deleting listing ${id}:`, error);
+      return false;
+    }
+    return true; // Assuming success if no error
   },
 
   findAll: async (filters?: Partial<WasteListing>): Promise<WasteListing[]> => {
