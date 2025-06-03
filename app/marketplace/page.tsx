@@ -307,7 +307,6 @@ export default function MarketplacePage() {
                     </CardContent>
                     <CardFooter className="flex items-center justify-between p-4 pt-0">
                       <div className="text-sm text-gray-500">
-                        {listing.interests}
                         <DialogTrigger asChild>
                           <span
                             className="ml-2 text-blue-600 hover:text-blue-800 cursor-pointer"

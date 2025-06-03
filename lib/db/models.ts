@@ -88,26 +88,33 @@ export const UserModel = {
 // Waste Listing Model Implementation
 export const WasteListingModel = {
   create: async (
-    listingData: Omit<WasteListing, "id" | "interestCount" | "createdAt" | "updatedAt">
+    listingData: Omit<WasteListing, "id" | "createdAt" | "updatedAt">
   ): Promise<WasteListing> => {
     const now = new Date();
+    
+    console.log("Creating listing with data:", listingData);
+
     const { data, error } = await supabase
       .from("listings")
       .insert({
         ...listingData,
-        createdAt: now,
-        updatedAt: now,
+        createdAt: now.toISOString(),
+        updatedAt: now.toISOString(),
       })
       .select();
 
     if (error) {
+      console.error("Database error:", error);
       throw new Error(`Failed to insert listing: ${error.message}`);
     }
 
-    return data[0];
-  },
+    if (!data || data.length === 0) {
+      throw new Error("No data returned from database after insert");
+    }
 
-  findById: async (id: string): Promise<WasteListing | null> => {
+    console.log("Successfully created listing:", data[0]);
+    return data[0] as WasteListing;
+  },findById: async (id: string): Promise<WasteListing | null> => {
     const { data, error } = await supabase
       .from("listings")
       .select("*")
@@ -149,9 +156,7 @@ export const WasteListingModel = {
       return false;
     }
     return true; // Assuming success if no error
-  },
-
-  findAll: async (filters?: Partial<WasteListing>): Promise<WasteListing[]> => {
+  },  findAll: async (filters?: Partial<WasteListing>): Promise<WasteListing[]> => {
     const query = supabase.from("listings").select("*");
 
     if (filters) {
@@ -182,20 +187,6 @@ export const WasteListingModel = {
         listing.subtype.toLowerCase().includes(lowercaseQuery),
     )
   },
-
-  incrementInterestCount: async (id: string): Promise<WasteListing | null> => {
-    const listing = inMemoryDb.listings.get(id)
-    if (!listing) return null
-
-    const updatedListing: WasteListing = {
-      ...listing,
-      interestCount: listing.interestCount + 1,
-      updatedAt: new Date(),
-    }
-    inMemoryDb.listings.set(id, updatedListing)
-    return updatedListing
-  },
-
   markAsSold: async (id: string): Promise<WasteListing | null> => {
     const listing = inMemoryDb.listings.get(id)
     if (!listing) return null
@@ -212,19 +203,17 @@ export const WasteListingModel = {
 
 // Interest Model Implementation
 export const InterestModel = {
-  create: async (interestData: Omit<Interest, "id" | "createdAt">): Promise<Interest> => {
+  create: async (interestData: Omit<Interest, "id" | "createdAt" | "updatedAt">): Promise<Interest> => {
     const id = uuidv4()
     const now = new Date()
     const interest: Interest = {
       id,
       ...interestData,
       createdAt: now,
+      updatedAt: now,
     }
     inMemoryDb.interests.set(id, interest)
-
-    // Increment the interest count on the listing
-    await WasteListingModel.incrementInterestCount(interestData.listingId)
-
+    
     return interest
   },
 

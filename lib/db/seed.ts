@@ -18,7 +18,7 @@ export async function seedDatabase() {
 
   // Create seller users
   const sellers: User[] = []
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 3; i++) {
     const seller = await Models.User.create({
       name: `Seller ${i}`,
       email: `seller${i}@example.com`,
@@ -26,17 +26,17 @@ export async function seedDatabase() {
       role: "seller",
       phone: `+91 98765432${i}0`,
       address: `${i} Farmer Street`,
-      city: ["Guntur", "Pune", "Kochi", "Ludhiana", "Jaipur"][i - 1],
-      state: ["Andhra Pradesh", "Maharashtra", "Kerala", "Punjab", "Rajasthan"][i - 1],
+      city: ["Guntur", "Pune", "Kochi"][i - 1],
+      state: ["Andhra Pradesh", "Maharashtra", "Kerala"][i - 1],
       pincode: `5000${i}1`,
-      bio: `Experienced farmer with ${i * 5} years in sustainable agriculture.`,
+      bio: `Experienced farmer with ${i * 5} years in agriculture.`,
     })
     sellers.push(seller)
   }
 
   // Create buyer users
   const buyers: User[] = []
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 3; i++) {
     const buyer = await Models.User.create({
       name: `Buyer ${i}`,
       email: `buyer${i}@example.com`,
@@ -44,10 +44,10 @@ export async function seedDatabase() {
       role: "buyer",
       phone: `+91 87654321${i}0`,
       address: `${i} Industry Road`,
-      city: ["Bangalore", "Mumbai", "Chennai", "Delhi", "Hyderabad"][i - 1],
-      state: ["Karnataka", "Maharashtra", "Tamil Nadu", "Delhi", "Telangana"][i - 1],
+      city: ["Bangalore", "Mumbai", "Chennai"][i - 1],
+      state: ["Karnataka", "Maharashtra", "Tamil Nadu"][i - 1],
       pincode: `6000${i}1`,
-      bio: `Industry professional looking for sustainable waste materials.`,
+      bio: `Industry professional looking for sustainable materials.`,
     })
     buyers.push(buyer)
   }
@@ -56,7 +56,7 @@ export async function seedDatabase() {
   const wasteTypes = [
     {
       title: "Rice Husk - 2 Tons",
-      description: "Clean rice husk available for collection. Ideal for fuel or animal bedding.",
+      description: "Clean rice husk available for collection.",
       type: "Agricultural",
       subtype: "Rice Husk",
       quantity: 2,
@@ -65,7 +65,7 @@ export async function seedDatabase() {
     },
     {
       title: "Sugarcane Bagasse - 5 Tons",
-      description: "Fresh sugarcane bagasse available. Perfect for paper manufacturing or biofuel.",
+      description: "Fresh sugarcane bagasse available.",
       type: "Agricultural",
       subtype: "Bagasse",
       quantity: 5,
@@ -74,30 +74,12 @@ export async function seedDatabase() {
     },
     {
       title: "Coconut Shells - 500kg",
-      description: "Dried coconut shells available. Great for activated carbon or crafts.",
+      description: "Dried coconut shells available.",
       type: "Agricultural",
       subtype: "Coconut Shells",
       quantity: 500,
       unit: "kg",
       price: 1500,
-    },
-    {
-      title: "Wheat Straw - 3 Tons",
-      description: "Baled wheat straw available. Suitable for animal feed, mushroom cultivation, or biofuel.",
-      type: "Agricultural",
-      subtype: "Straw",
-      quantity: 3,
-      unit: "ton",
-      price: 3000,
-    },
-    {
-      title: "Sawdust - 1 Ton",
-      description: "Clean sawdust from furniture manufacturing. Ideal for composting or animal bedding.",
-      type: "Industrial",
-      subtype: "Sawdust",
-      quantity: 1,
-      unit: "ton",
-      price: 1200,
     },
   ]
 
@@ -113,30 +95,15 @@ export async function seedDatabase() {
       quantity: wasteTypes[i].quantity,
       unit: wasteTypes[i].unit,
       price: wasteTypes[i].price,
-      isNegotiable: i % 2 === 0,
       status: i === 2 ? "sold" : "active", // Make one listing sold
-      images: [`/placeholder.svg?height=200&width=300&text=${wasteTypes[i].subtype}`],
-      location: {
-        address: seller.address || "",
-        city: seller.city || "",
-        state: seller.state || "",
-        pincode: seller.pincode || "",
-        coordinates: {
-          latitude: 10 + i * 0.5,
-          longitude: 76 + i * 0.5,
-        },
-      },
-      specifications: {
-        "Moisture Content": i % 2 === 0 ? "< 10%" : "10-15%",
-        Age: i % 3 === 0 ? "Fresh (< 1 month)" : "1-3 months old",
-        "Collection Method": i % 2 === 0 ? "Pickup only" : "Delivery available",
-      },
+      image: `/placeholder.svg?height=200&width=300&text=${wasteTypes[i].subtype}`, // Changed from images array to single image string
+      location: `${seller.city || ""}, ${seller.state || ""}`.trim(), // Simplified location string
     })
     listings.push(listing)
   }
 
   // Create interests
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const listingIndex = i % listings.length
     const buyerIndex = i % buyers.length
 
@@ -145,13 +112,13 @@ export async function seedDatabase() {
         listingId: listings[listingIndex].id,
         buyerId: buyers[buyerIndex].id,
         status: i % 3 === 0 ? "accepted" : "pending",
-        message: `I'm interested in your ${listings[listingIndex].subtype} listing. Is it still available?`,
+        message: `I'm interested in your ${listings[listingIndex].subtype} listing.`,
       })
     }
   }
 
   // Create messages
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 5; i++) {
     const sellerIndex = i % sellers.length
     const buyerIndex = i % buyers.length
     const listingIndex = i % listings.length
@@ -160,14 +127,12 @@ export async function seedDatabase() {
       senderId: i % 2 === 0 ? sellers[sellerIndex].id : buyers[buyerIndex].id,
       receiverId: i % 2 === 0 ? buyers[buyerIndex].id : sellers[sellerIndex].id,
       listingId: listings[listingIndex].id,
-      content: `Message ${i + 1}: Regarding the ${listings[listingIndex].subtype} listing. ${
-        i % 2 === 0 ? "Is it still available?" : "Yes, it's available for pickup."
-      }`,
+      content: `Message ${i + 1}: Regarding the ${listings[listingIndex].subtype} listing.`,
     })
   }
 
   // Create reviews
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 4; i++) {
     const sellerIndex = i % sellers.length
     const buyerIndex = i % buyers.length
 
@@ -175,7 +140,7 @@ export async function seedDatabase() {
       reviewerId: i % 2 === 0 ? buyers[buyerIndex].id : sellers[sellerIndex].id,
       revieweeId: i % 2 === 0 ? sellers[sellerIndex].id : buyers[buyerIndex].id,
       rating: 3 + (i % 3), // Ratings from 3-5
-      comment: `${i % 2 === 0 ? "Great seller!" : "Reliable buyer!"} Transaction was smooth and professional.`,
+      comment: `${i % 2 === 0 ? "Great seller!" : "Reliable buyer!"} Professional transaction.`,
     })
   }
 
@@ -197,7 +162,7 @@ export async function seedDatabase() {
   }
 
   // Create notifications
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const userIndex = i % (sellers.length + buyers.length)
     const userId = userIndex < sellers.length ? sellers[userIndex].id : buyers[userIndex - sellers.length].id
 
@@ -213,7 +178,7 @@ export async function seedDatabase() {
       userId,
       type: types[i % types.length],
       title: `Notification ${i + 1}`,
-      message: `This is a ${types[i % types.length]} notification for testing purposes.`,
+      message: `This is a ${types[i % types.length]} notification.`,
       relatedId: i % 2 === 0 ? listings[i % listings.length].id : undefined,
     })
   }
@@ -228,7 +193,7 @@ export async function seedDatabase() {
     "all_time",
   ]
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 10; i++) {
     const date = new Date()
     date.setDate(date.getDate() - i)
 

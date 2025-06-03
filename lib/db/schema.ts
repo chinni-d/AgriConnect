@@ -30,23 +30,13 @@ export type WasteListing = {
   quantity: number
   unit: string // e.g., "kg", "ton"
   price: number
-  isNegotiable: boolean
   status: "active" | "sold" | "archived"
-  images: string[] // Array of image URLs
-  location: {
-    address: string
-    city: string
-    state: string
-    pincode: string
-    coordinates?: {
-      latitude: number
-      longitude: number
-    }
-  }
-  specifications: {
+  image?: string // Single image URL
+  location: string // Simplified to single string for now
+  specifications?: {
     [key: string]: string // Dynamic specifications like moisture content, age, etc.
   }
-  interestCount: number
+  contactNumber?: string
   createdAt: Date
   updatedAt: Date
 }
