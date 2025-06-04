@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Bell, Menu, User } from "lucide-react"
 import { useState } from "react"
+import Image from "next/image"
 
 export function DashboardHeader() {
   const { user, logout } = useAuth()
@@ -39,6 +40,7 @@ export function DashboardHeader() {
             <span className="sr-only">Toggle menu</span>
           </Button>
           <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.png" alt="AgriConnect Logo" width={40} height={40} />
             <span className="text-xl font-bold text-green-600">AgriConnect</span>
           </Link>
         </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -56,7 +57,8 @@ export function Header() {
       <div className="container relative flex h-16 items-center justify-between">
         {/* Nav name/logo for desktop view (top left) */}
         <div className="hidden md:flex items-center mr-4">
-          <Link href="/">
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/logo.png" alt="AgriConnect Logo" width={32} height={32} />
             <span className="text-xl font-bold text-green-600">AgriConnect</span>
           </Link>
         </div>
@@ -163,7 +165,8 @@ export function Header() {
           </button>
           {/* Logo (centered) */}
           <div className="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
-            <Link href="/">
+            <Link href="/" className="flex items-center gap-2">
+              <Image src="/logo.png" alt="AgriConnect Logo" width={32} height={32} />
               <span className="text-xl font-bold text-green-600">AgriConnect</span>
             </Link>
             {/* Cart button (beside nav name) */}
