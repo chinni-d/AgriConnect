@@ -112,9 +112,7 @@ export default function CartPage() {
                       </div>
                     </CardContent>
                     <CardFooter className="flex items-center justify-between p-4 pt-0">
-                      <div className="text-sm text-gray-500">
-                        {item.interests} interested
-                      </div>
+                    
                       <Button className="bg-green-600 hover:bg-green-700" onClick={() => handleBuy(item)}>
                         Buy
                       </Button>

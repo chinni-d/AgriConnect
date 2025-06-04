@@ -219,10 +219,7 @@ export default function MarketplacePage() {
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Maximum Distance: {maxDistance[0]} km</Label>
-                    <Slider defaultValue={[50]} max={100} step={5} value={maxDistance} onValueChange={setMaxDistance} />
-                  </div>
+               
 
                   <div className="space-y-2">
                     <Label htmlFor="sort-by">Sort By</Label>

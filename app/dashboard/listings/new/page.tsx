@@ -364,7 +364,7 @@ export default function NewListingPage() {
                     </div>
                   )}                </div>
                 <p className="mt-2 text-xs text-gray-500">
-                  Supported formats: All image formats (JPG, PNG, GIF, WEBP, SVG, etc.). Max file size: 5MB.
+                  Supported formats: All image formats (JPG, PNG, JPEG, WEBP, SVG, etc.). Max file size: 5MB.
                 </p>
               </CardContent>
             </Card>
