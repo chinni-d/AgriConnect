@@ -102,10 +102,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.6 }}
               >
                 <p className="mb-8 text-gray-500">
-                  AgriConnect was founded in 2023 by a team of agricultural experts, environmental scientists, and
-                  technology innovators who recognized the immense potential in agricultural waste. What began as a small
-                  pilot project in rural communities has now grown into a comprehensive platform serving farmers and
-                  industries across the country.
+                AgriConnect is an innovative platform launched in 2023 with the goal of transforming agricultural waste management. Designed to connect farmers with industries in need of sustainable raw materials, the platform provides a smart solution for waste disposal while promoting environmental sustainability.
                 </p>
               </motion.div>
               <motion.div
@@ -115,10 +112,8 @@ export default function AboutPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <p className="mb-8 text-gray-500">
-                  Our founders witnessed firsthand the challenges farmers faced in disposing of agricultural waste, while
-                  simultaneously observing industries struggling to find sustainable raw materials. This disconnect
-                  inspired the creation of AgriConnect – a platform that bridges this gap and transforms waste management
-                  into a win-win situation for all stakeholders.
+                  The project addresses two major issues: the difficulty farmers face in managing waste and the growing demand for eco-friendly resources in industries. By bridging this gap, AgriConnect helps reduce landfill waste and opens new income streams for rural communities.
+
                 </p>
               </motion.div>
               <motion.div
@@ -128,9 +123,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
                 <p className="text-gray-500">
-                  Today, AgriConnect continues to grow, driven by our commitment to sustainability, innovation, and
-                  community empowerment. We're proud of the positive environmental impact we've made and the economic
-                  opportunities we've created for our users.
+                 AgriConnect continues to evolve with features that empower users, enhance transparency in transactions, and support green practices. It stands as a model for how technology can drive both economic growth and environmental responsibility in the agricultural sector.
                 </p>
               </motion.div>
             </div>
