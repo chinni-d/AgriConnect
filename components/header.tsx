@@ -3,18 +3,36 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useState, useEffect } from "react"
-import { ShoppingCart } from "lucide-react"
+import { 
+  ShoppingCart, 
+  Menu, 
+  Home, 
+  Info, 
+  Users, 
+  LayoutDashboard, 
+  ShoppingBag, 
+  Mail, 
+  LogIn, 
+  UserPlus,
+  UserCircle // For user info
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/use-auth"
-import { Menu, X } from "lucide-react"
-import { motion } from "framer-motion"
 import { useRouter, usePathname } from "next/navigation"
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
+import { Separator } from "@/components/ui/separator" // Added Separator
 
 export function Header() {
-  const { user, status } = useAuth()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { user, status, logout } = useAuth()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [isDesktopProfileOpen, setIsDesktopProfileOpen] = useState(false); // New state for desktop profile dropdown
+  const [isDesktopProfileOpen, setIsDesktopProfileOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const router = useRouter()
   const pathname = usePathname();
@@ -33,24 +51,21 @@ export function Header() {
     };
   }, []);
 
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      const menu = document.querySelector(".menu-container");
-      if (menu && !menu.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    if (isMenuOpen) {
-      document.addEventListener("mousedown", handleOutsideClick);
+  const getLinkClassName = (href: string) => {
+    const isActive = pathname === href;
+    // Added flex items-center for icon alignment
+    const baseStyle = "flex items-center w-full text-left rounded-md px-3 py-2 text-sm"; 
+    if (isActive) {
+      return `${baseStyle} font-bold text-green-600 border-l-4 border-green-600`;
     } else {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      return `${baseStyle} text-foreground hover:bg-accent hover:text-accent-foreground`;
     }
+  };
 
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [isMenuOpen]);
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -130,12 +145,7 @@ export function Header() {
                   {/* No dashboard for buyers */}
                   <button
                     className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                    onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        localStorage.removeItem('agriconnect-user');
-                        window.location.href = '/login';
-                      }
-                    }}
+                    onClick={handleLogout} // Use centralized handleLogout
                   >
                     Logout
                   </button>
@@ -155,14 +165,119 @@ export function Header() {
         </div>
         {/* Profile, cart, and hamburger menu for mobile - right aligned */}
         <div className="md:hidden flex items-center justify-between w-full">
-          {/* Hamburger menu (leftmost) */}
-          <button
-            className="p-2 bg-green-100 rounded-md hover:bg-green-200 transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={24} className="text-green-600" /> : <Menu size={24} className="text-green-600" />}
-          </button>
+          {/* Hamburger menu (leftmost) - Replaced with SheetTrigger */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="p-2 bg-green-100 rounded-md hover:bg-green-200 transition-colors"
+                aria-label="Toggle menu"
+              >
+                <Menu className="h-5 w-5 text-green-600" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-3/4 sm:w-1/2 md:hidden"> {/* Adjusted width for better responsiveness */}
+              <SheetHeader className="mb-4 pb-2 border-b">
+                <SheetTitle className="flex items-center gap-2">
+                  <Image src="/logo.png" alt="AgriConnect Logo" width={32} height={32} />
+                  <span className="text-lg font-bold text-green-600">AgriConnect</span>
+                </SheetTitle>
+              </SheetHeader>
+              
+              {status === "authenticated" && user && (
+                <div className="px-3 py-2 mb-2 border-b">
+                  <div className="flex items-center gap-2 mb-1">
+                    <UserCircle className="h-5 w-5 text-muted-foreground" />
+                    <p className="text-sm font-medium">{user.name || user.email}</p>
+                  </div>
+                  <p className="text-xs text-muted-foreground px-1">{user.role}</p>
+                </div>
+              )}
+
+              <nav className="flex flex-col space-y-1 p-1"> {/* Reduced space-y and added padding */}
+                {status === "authenticated" && user?.role === "seller" ? (
+                  <>
+                    <SheetClose asChild>
+                      <Link href="/" className={getLinkClassName("/")}>
+                        <Home className="mr-2 h-4 w-4" /> Home
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/about" className={getLinkClassName("/about")}>
+                        <Info className="mr-2 h-4 w-4" /> About
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/contact" className={getLinkClassName("/contact")}>
+                        <Mail className="mr-2 h-4 w-4" /> Contact
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/dashboard" className={getLinkClassName("/dashboard")}>
+                        <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                      </Link>
+                    </SheetClose>
+                  </>
+                ) : (
+                  <>
+                    <SheetClose asChild>
+                      <Link href="/" className={getLinkClassName("/")}>
+                        <Home className="mr-2 h-4 w-4" /> Home
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/about" className={getLinkClassName("/about")}>
+                        <Info className="mr-2 h-4 w-4" /> About
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/marketplace" className={getLinkClassName("/marketplace")}>
+                        <ShoppingBag className="mr-2 h-4 w-4" /> Marketplace
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/contact" className={getLinkClassName("/contact")}>
+                        <Mail className="mr-2 h-4 w-4" /> Contact
+                      </Link>
+                    </SheetClose>
+                  </>
+                )}
+                
+                <Separator className="my-2" /> 
+
+                {status === "authenticated" ? (
+                  <SheetClose asChild>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center w-full text-left rounded-md px-3 py-2 text-sm font-medium text-red-600 bg-red-100 hover:bg-red-200 transition-colors"
+                    >
+                      <LogIn className="mr-2 h-4 w-4" /> {/* Changed icon to LogOut or similar if available, using LogIn for now */}
+                      Logout
+                    </button>
+                  </SheetClose>
+                ) : (
+                  <>
+                    <SheetClose asChild>
+                      <Link href="/login" className={getLinkClassName("/login") + " mt-1"}> {/* Added mt-1 for spacing */}
+                        <Button variant="outline" className="w-full justify-start">
+                          <LogIn className="mr-2 h-4 w-4" /> Log in
+                        </Button>
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/register" className={getLinkClassName("/register")}>
+                        <Button className="w-full justify-start bg-green-600 hover:bg-green-700">
+                          <UserPlus className="mr-2 h-4 w-4" /> Sign up
+                        </Button>
+                      </Link>
+                    </SheetClose>
+                  </>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
+
           {/* Logo (centered) */}
           <div className="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
             <Link href="/" className="flex items-center gap-2">
@@ -204,14 +319,9 @@ export function Header() {
               {isProfileOpen && (
                 <div className="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                   <div className="py-2 px-4 text-sm text-gray-700">{user.name || user.email}</div>
-                 <button
+                  <button
                     className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                    onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        localStorage.removeItem('agriconnect-user');
-                        window.location.href = '/login';
-                      }
-                    }}
+                    onClick={handleLogout} // Use centralized handleLogout
                   >
                     Logout
                   </button>
@@ -221,82 +331,6 @@ export function Header() {
           )}
         </div>
       </div>
-      {isMenuOpen && (
-        <motion.div
-          initial={{ x: "-100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "-100%" }}
-          transition={{ duration: 0.3 }}
-          className="fixed top-0 left-0 h-screen w-1/2 bg-white shadow-lg z-50 md:hidden flex flex-col menu-container"
-        >
-          <div className="p-4 border-b flex items-center justify-between">
-            <span className="text-lg font-bold text-green-600">Menu</span>
-            <button
-              className="text-gray-600 hover:text-gray-800"
-              onClick={() => setIsMenuOpen(false)}
-              aria-label="Close menu"
-            >
-              <X size={24} />
-            </button>
-          </div>
-          <nav className="flex flex-col space-y-4 p-4">
-            <Link
-              href="/"
-              className={`text-sm font-medium transition-colors ${pathname === "/" ? "text-green-600 font-bold border-l-4 border-green-600 pl-2" : "hover:text-green-600"}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className={`text-sm font-medium transition-colors ${pathname === "/about" ? "text-green-600 font-bold border-l-4 border-green-600 pl-2" : "hover:text-green-600"}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              About
-            </Link>
-            <Link
-              href="/marketplace"
-              className={`text-sm font-medium transition-colors ${pathname === "/marketplace" ? "text-green-600 font-bold border-l-4 border-green-600 pl-2" : "hover:text-green-600"}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Marketplace
-            </Link>
-            <Link
-              href="/contact"
-              className={`text-sm font-medium transition-colors ${pathname === "/contact" ? "text-green-600 font-bold border-l-4 border-green-600 pl-2" : "hover:text-green-600"}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact
-            </Link>
-            {status === "authenticated" ? (
-              <button
-                className="text-sm font-medium text-red-600 hover:text-white bg-red-100 hover:bg-red-600 transition-colors mt-4 py-2 px-4 rounded-md shadow-md"
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    localStorage.removeItem("agriconnect-user");
-                    window.location.href = "/login";
-                  }
-                }}
-              >
-                Logout
-              </button>
-            ) : (
-              <div className="flex flex-col gap-2 pt-4">
-                <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full" variant="outline">
-                    Log in
-                  </Button>
-                </Link>
-                <Link href="/register" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full bg-green-600 hover:bg-green-700">
-                    Sign up
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </nav>
-        </motion.div>
-      )}
     </header>
   )
 }

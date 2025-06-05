@@ -21,26 +21,6 @@ export function DashboardSidebar() {
       href: "/dashboard/listings",
       icon: FileText,
     },
-    {
-      title: "Interested Buyers",
-      href: "/dashboard/interests",
-      icon: Users,
-    },
-    {
-      title: "Messages",
-      href: "/dashboard/messages",
-      icon: MessageSquare,
-    },
-    {
-      title: "Analytics",
-      href: "/dashboard/analytics",
-      icon: BarChart,
-    },
-    {
-      title: "Settings",
-      href: "/dashboard/settings",
-      icon: Settings,
-    },
   ]
 
   const buyerNavItems = [
