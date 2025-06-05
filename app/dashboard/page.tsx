@@ -43,7 +43,30 @@ export default function DashboardPage() {
 
         let wasteDiverted = 0;
         soldListings.forEach((listing: any) => {
-          if (typeof listing.quantity === 'number') {
+          if (typeof listing.quantity === 'number' && listing.unit) {
+            let quantityInKg = listing.quantity;
+            switch (listing.unit.toLowerCase()) {
+              case 'tons':
+              case 'ton':
+                quantityInKg *= 1000;
+                break;
+              case 'quintals':
+              case 'quintal':
+                quantityInKg *= 100;
+                break;
+              // Default is kg, no conversion needed
+              case 'kg':
+              case 'kilograms':
+              case 'kilogram':
+                break;
+              default:
+                // if unit is unknown or not provided, we assume kg or skip if quantity is not a number
+                // console.warn(`Unknown unit: ${listing.unit} for listing ${listing.id}. Assuming kg if quantity is a number.`);
+                break; 
+            }
+            wasteDiverted += quantityInKg;
+          } else if (typeof listing.quantity === 'number') {
+            // If unit is not specified, assume kg as a fallback
             wasteDiverted += listing.quantity;
           }
         });

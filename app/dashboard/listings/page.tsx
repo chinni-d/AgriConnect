@@ -205,14 +205,13 @@ export default function ListingsPage() {
                         <Calendar className="mr-2 h-4 w-4" />
                         {listing.status === 'sold' && listing.updatedAt ? `Sold on ${new Date(listing.updatedAt).toLocaleDateString()}` : `Listed ${listing.date}`}
                       </div>
-                      <div className="flex items-center font-medium">Price: {listing.price}</div>
+                     <div className="flex items-center justify-between font-medium">
+                        <span>Price: {listing.price}</span>
+                        <span>Quantity: {listing.quantity} {listing.unit}</span>
+                      </div>
                     </div>
                   </CardContent>
-                  <CardFooter className="flex items-center justify-between p-4 pt-0">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Users className="mr-1 h-4 w-4" />
-                      {listing.interests} interested
-                    </div>
+                  <CardFooter className="flex items-center justify-end p-4 pt-0">
                     <Button size="sm" className="bg-green-600 hover:bg-green-700" asChild>
                       <Link href={`/dashboard/listings/${listing.id}`}>View Details</Link>
                     </Button>
@@ -250,17 +249,19 @@ export default function ListingsPage() {
                       </div>
                       <div className="flex items-center text-gray-500">
                         <Calendar className="mr-2 h-4 w-4" />
-                        {listing.status === 'sold' && listing.updatedAt ? `Sold on ${new Date(listing.updatedAt).toLocaleDateString()}` : (listing.date ? `Listed ${listing.date}` : 'Date not available')}
+                        {listing.status === 'sold' && listing.updatedAt
+                          ? `Sold on ${new Date(listing.updatedAt).toLocaleDateString()}`
+                          : (listing.date ? `Listed ${listing.date}` : 'Date not available')}
                       </div>
-                      <div className="flex items-center font-medium">Price: {listing.price}</div>
+                      <div className="flex items-center justify-between font-medium">
+                        <span>Price: {listing.price}</span>
+                        <span>Quantity: {listing.quantity} {listing.unit}</span>
+                      </div>
                     </div>
+                 
                   </CardContent>
-                  <CardFooter className="flex items-center justify-between p-4 pt-0">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Users className="mr-1 h-4 w-4" />
-                      {listing.interests} were interested
-                    </div>
-                    <Button size="sm" variant="outline" className="bg-green-600 hover:bg-green-700 text-white" asChild>
+                 <CardFooter className="flex items-center justify-end p-4 pt-0">
+                    <Button size="sm" className="bg-green-600 hover:bg-green-700" asChild>
                       <Link href={`/dashboard/listings/${listing.id}`}>View Details</Link>
                     </Button>
                   </CardFooter>
@@ -302,24 +303,17 @@ export default function ListingsPage() {
                       <Calendar className="mr-2 h-4 w-4" />
                       {listing.status === 'sold' && listing.updatedAt ? `Sold on ${new Date(listing.updatedAt).toLocaleDateString()}` : (listing.date ? `Listed ${listing.date}` : 'Date not available')}
                     </div>
-                    <div className="flex items-center font-medium">Price: {listing.price}</div>
+                   <div className="flex items-center justify-between font-medium">
+                        <span>Price: {listing.price}</span>
+                        <span>Quantity: {listing.quantity} {listing.unit}</span>
+                      </div>
                   </div>
                 </CardContent>
-                <CardFooter className="flex items-center justify-between p-4 pt-0">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Users className="mr-1 h-4 w-4" />
-                    {listing.interests} interested
-                  </div>
-                  <Button
-                    size="sm"
-                    className={
-                      listing.status === "active" ? "bg-green-600 hover:bg-green-700" : "bg-green-600 hover:bg-green-700"
-                    }
-                    asChild
-                  >
-                    <Link href={`/dashboard/listings/${listing.id}`}>View Details</Link>
-                  </Button>
-                </CardFooter>
+              <CardFooter className="flex items-center justify-end p-4 pt-0">
+                    <Button size="sm" className="bg-green-600 hover:bg-green-700" asChild>
+                      <Link href={`/dashboard/listings/${listing.id}`}>View Details</Link>
+                    </Button>
+                  </CardFooter>
               </Card>
             ))}
           </div>
