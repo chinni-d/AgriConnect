@@ -155,7 +155,7 @@ export default function AboutPage() {
                   name: "Renuka Darapureddy",
                   role: "Data Science & AI Developer",
                   bio: "Enthusiast in Data Science and Artificial Intelligence with a passion for learning and innovation. Keen on exploring data-driven solutions and intelligent technologies to solve real-world problems.",
-                  image: "renu.jpg",
+                  image: "renu.png",
                 },
                 {
                   name: "Garlapati Priya sri",
