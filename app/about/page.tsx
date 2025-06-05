@@ -102,7 +102,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.6 }}
               >
                 <p className="mb-8 text-gray-500">
-                AgriConnect is an innovative platform launched in 2023 with the goal of transforming agricultural waste management. Designed to connect farmers with industries in need of sustainable raw materials, the platform provides a smart solution for waste disposal while promoting environmental sustainability.
+                AgriConnect is an innovative platform launched in 2025 with the goal of transforming agricultural waste management. Designed to connect farmers with industries in need of sustainable raw materials, the platform provides a smart solution for waste disposal while promoting environmental sustainability.
                 </p>
               </motion.div>
               <motion.div
