@@ -27,13 +27,13 @@ export default function AboutPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center justify-center">
+              {/* <div className="flex items-center justify-center">
                 <img
                   alt="AgriConnect Team"
                   className="aspect-video overflow-hidden rounded-xl object-cover object-center"
                   src="/placeholder.svg?height=550&width=800"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
