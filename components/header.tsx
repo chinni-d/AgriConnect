@@ -346,6 +346,15 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+
+            {/* ADDED: Login Button for Mobile (unauthenticated users) */}
+            {status !== "authenticated" && (
+              <Link href="/login" passHref>
+                <Button variant="outline" size="sm">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
