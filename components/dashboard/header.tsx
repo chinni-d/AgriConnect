@@ -27,7 +27,8 @@ import {
   LogOut, // Changed from LogIn for logout button
   Home,
   Info,
-  Mail
+  Mail,
+  X // Added X icon for the close button
 } from "lucide-react"
 import Image from "next/image"
 import {
@@ -140,7 +141,8 @@ export function DashboardHeader() {
                 <Menu className="h-5 w-5 text-green-600" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-3/4 sm:w-1/2">
+            <SheetContent side="left" className="w-60 sm:w-72"> {/* Adjusted width here */}
+              {/* REMOVED manually added SheetClose as SheetContent provides one by default */}
               <SheetHeader className="mb-4 pb-2 border-b">
                 <SheetTitle className="flex items-center gap-2">
                   <Image src="/logo.png" alt="AgriConnect Logo" width={32} height={32} />

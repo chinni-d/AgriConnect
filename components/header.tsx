@@ -15,7 +15,8 @@ import {
   LogIn, 
   UserPlus,
   UserCircle,
-  LogOut
+  LogOut,
+  X // Added X icon for the close button
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/use-auth"
@@ -32,7 +33,7 @@ import { Separator } from "@/components/ui/separator"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuItem, // Ensured DropdownMenuItem is imported
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -220,7 +221,8 @@ export function Header() {
                 <Menu className="h-5 w-5 text-green-600" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-3/4 sm:w-1/2 md:hidden">
+            <SheetContent side="left" className="w-60 sm:w-72 md:hidden"> {/* Adjusted width here */}
+              {/* REMOVED manually added SheetClose as SheetContent provides one by default */}
               <SheetHeader className="mb-4 pb-2 border-b">
                 <SheetTitle className="flex items-center gap-2">
                   <Image src="/logo.png" alt="AgriConnect Logo" width={32} height={32} />
