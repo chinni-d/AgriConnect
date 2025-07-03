@@ -232,7 +232,6 @@ export default function MarketplacePage() {
                         <SelectItem value="oldest">Oldest First</SelectItem>
                         <SelectItem value="price_low">Price: Low to High</SelectItem>
                         <SelectItem value="price_high">Price: High to Low</SelectItem>
-                        <SelectItem value="distance">Distance: Nearest</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -290,7 +289,7 @@ export default function MarketplacePage() {
                       <div className="mt-4 space-y-2 text-sm">
                         <div className="flex items-center text-gray-500">
                           <MapPin className="mr-2 h-4 w-4" />
-                          {listing.location} ({listing.distance})
+                          {listing.location} 
                         </div>
                         <div className="flex items-center text-gray-500">
                           <Calendar className="mr-2 h-4 w-4" />
