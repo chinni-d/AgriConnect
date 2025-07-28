@@ -225,7 +225,7 @@ export default function AboutPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24 bg-green-50">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <motion.div
